@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spicyspoon/controller/home_controller.dart';
-import 'package:spicyspoon/dashboard/add_product.dart';
-import 'package:spicyspoon/dashboard/edit_product.dart';
+import 'package:spicyspoon/dashboard/add_menu.dart';
+import 'package:spicyspoon/dashboard/edit_menu.dart';
 import 'package:spicyspoon/dashboard/order.dart';
 import 'package:spicyspoon/dashboard/sales_record.dart';
 
@@ -18,8 +18,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final List<Widget> _screen = const [
     Order(),
-    AddProduct(),
-    EditProduct(),
+    AddMenu(),
+    EditMenu(),
     SalesRecord()
   ];
 

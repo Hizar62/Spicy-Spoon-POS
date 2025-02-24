@@ -49,34 +49,57 @@ class _OrderState extends State<Order> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                const Text(
+                  'Quantity',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.1,
+                ),
                 Obx(() {
-                  return Text(
-                    keyboardController.text.value,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                  return Container(
+                    width: screenWidth,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      keyboardController.text.value,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   );
                 }),
-                NumericKeyboard(
-                  onKeyboardTap: keyboardController.onKeyboardTap,
-                  textColor: Colors.black,
-                  rightButtonFn: () {
-                    if (keyboardController.text.value.isNotEmpty) {
-                      keyboardController.text.value =
-                          keyboardController.text.value.substring(
-                              0, keyboardController.text.value.length - 1);
-                    }
-                  },
-                  rightIcon: const Icon(
-                    Icons.backspace,
-                    color: Colors.red,
-                  ),
-                  leftButtonFn: () {},
-                  leftIcon: const Icon(
-                    Icons.check,
-                    color: Colors.red,
+                SizedBox(
+                  width: 300,
+                  height: 400,
+                  child: NumericKeyboard(
+                    onKeyboardTap: keyboardController.onKeyboardTap,
+                    textColor: Colors.black,
+                    rightButtonFn: () {
+                      if (keyboardController.text.value.isNotEmpty) {
+                        keyboardController.text.value =
+                            keyboardController.text.value.substring(
+                                0, keyboardController.text.value.length - 1);
+                      }
+                    },
+                    rightIcon: const Icon(
+                      Icons.backspace,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                    leftButtonFn: () {},
+                    leftIcon: const Icon(
+                      Icons.check_circle_outline_outlined,
+                      color: Colors.green,
+                      size: 30,
+                    ),
                   ),
                 ),
               ],
