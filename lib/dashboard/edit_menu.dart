@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:spicyspoon/boxes/boxes.dart';
 import 'package:spicyspoon/controller/add_menu_controller.dart';
 
+import '../model/menu_model.dart';
 import '../utils/utils.dart';
 
 class EditMenu extends StatelessWidget {
@@ -16,7 +21,79 @@ class EditMenu extends StatelessWidget {
     final AddMenuController controller = Get.put(AddMenuController());
     return Row(
       children: [
-        Expanded(child: Container()),
+        Expanded(
+          child: ValueListenableBuilder<Box<MenuModel>>(
+            valueListenable: Boxes.getData().listenable(),
+            builder: (context, box, _) {
+              var data = box.values.toList().cast<MenuModel>();
+
+              return GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                itemCount: data.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                  childAspectRatio: 0.7,
+                ),
+                itemBuilder: (context, index) {
+                  Uint8List imageBytes =
+                      data[index].productImage ?? Uint8List(0);
+
+                  return Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ignore: unnecessary_null_comparison
+                        imageBytes != null
+                            ? Image.memory(imageBytes,
+                                height: 100, fit: BoxFit.cover)
+                            : const Icon(Icons.image_not_supported, size: 100),
+                        const SizedBox(height: 8),
+                        Text(data[index].productName,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(data[index].productCategory,
+                            style: const TextStyle(color: Colors.grey)),
+                        Text("\$${data[index].price}",
+                            style: const TextStyle(color: Colors.green)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                controller.editData(
+                                    data[index],
+                                    imageBytes,
+                                    data[index].productName,
+                                    data[index].productCategory,
+                                    data[index].price);
+                              },
+                              icon: const Icon(Icons.edit),
+                              color: Colors.green,
+                              tooltip: "Edit Item",
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                controller.delete(data[index]);
+                              },
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                              tooltip: "Delete Item",
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
         Container(
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black, width: 0.5)),

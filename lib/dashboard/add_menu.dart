@@ -1,6 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:spicyspoon/boxes/boxes.dart';
 import 'package:spicyspoon/controller/add_menu_controller.dart';
+import 'package:spicyspoon/model/menu_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../utils/utils.dart';
 
@@ -17,7 +23,48 @@ class AddMenu extends StatelessWidget {
 
     return Row(
       children: [
-        Expanded(child: Container()),
+        Expanded(
+          child: ValueListenableBuilder<Box<MenuModel>>(
+            valueListenable: Boxes.getData().listenable(),
+            builder: (context, box, _) {
+              var data = box.values.toList().cast<MenuModel>();
+
+              return GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                itemCount: data.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                  childAspectRatio: 0.9,
+                ),
+                itemBuilder: (context, index) {
+                  Uint8List? imageBytes = data[index].productImage;
+
+                  return Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        imageBytes != null
+                            ? Image.memory(imageBytes,
+                                height: 100, fit: BoxFit.cover)
+                            : const Icon(Icons.image_not_supported, size: 100),
+                        const SizedBox(height: 8),
+                        Text(data[index].productName,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(data[index].productCategory,
+                            style: const TextStyle(color: Colors.grey)),
+                        Text("\$${data[index].price}",
+                            style: const TextStyle(color: Colors.green)),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
         Container(
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black, width: 0.5)),
@@ -140,14 +187,22 @@ class AddMenu extends StatelessWidget {
                           ),
                           backgroundColor: utils.buttonColor,
                         ),
-                        onPressed: () {},
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                              color: utils.backGroundColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        )),
+                        onPressed: () {
+                          controller.saveData();
+                        },
+                        child: Obx(() {
+                          return controller.isLoading.value
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: utils.backGroundColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                );
+                        })),
                   )
                 ],
               ),
