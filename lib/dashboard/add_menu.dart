@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spicyspoon/controller/add_menu_controller.dart';
 
+import '../utils/utils.dart';
+
 class AddMenu extends StatelessWidget {
   const AddMenu({super.key});
 
@@ -11,6 +13,7 @@ class AddMenu extends StatelessWidget {
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
     final AddMenuController controller = Get.put(AddMenuController());
+    final Utils utils = Utils();
 
     return Row(
       children: [
@@ -26,29 +29,126 @@ class AddMenu extends StatelessWidget {
               // Prevents overflow
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Add Product',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  Obx(() {
-                    return GestureDetector(
-                      onTap: () {
-                        controller.getImage();
-                      },
-                      child: Container(
-                          width: screenWidth * 0.25,
-                          height: screenHeight * 0.2,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
+                  GestureDetector(
+                    onTap: () {
+                      controller.getImage();
+                    },
+                    child: Obx(() {
+                      return Container(
+                        width: screenWidth * 0.25,
+                        height: screenHeight * 0.2,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: controller.imageBytes.value != null
+                            ? Image.memory(
+                                controller.imageBytes.value!,
+                                fit: BoxFit.contain,
+                              )
+                            : const Icon(Icons.camera_alt,
+                                size: 40, color: Colors.grey),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    child: TextFormField(
+                      controller: controller.productName,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        labelText: 'Product Name',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        hintText: 'Product Name',
+                        hintStyle: const TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    child: TextFormField(
+                      controller: controller.productCategory,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        labelText: 'Product Category',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        hintText: 'Product Category',
+                        hintStyle: const TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    child: TextFormField(
+                      controller: controller.productPrice,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Product Price',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        hintText: 'Product Price',
+                        hintStyle: const TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    width: screenWidth * 0.85,
+                    height: screenHeight * 0.07,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
                           ),
-                          child: const Icon(Icons.camera_alt,
-                              size: 40, color: Colors.grey)),
-                    );
-                  })
+                          backgroundColor: utils.buttonColor,
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: utils.backGroundColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        )),
+                  )
                 ],
               ),
             ),

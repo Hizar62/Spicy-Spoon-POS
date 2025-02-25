@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           title: Text(utils.companyName),
-          backgroundColor: utils.pimaryColor,
+          backgroundColor: utils.primaryColor,
           centerTitle: true,
         ),
         bottomNavigationBar: MediaQuery.of(context).size.width < 640

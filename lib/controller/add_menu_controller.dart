@@ -1,17 +1,22 @@
+import 'dart:typed_data';
+
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddMenuController extends GetxController {
-  RxString imagePath = ''.obs;
-  var productName = ''.obs;
-  var productCategory = ''.obs;
-  var productPrice = 0.obs;
+  var imageBytes = Rxn<Uint8List>();
+  final TextEditingController productName = TextEditingController();
+  final TextEditingController productCategory = TextEditingController();
+  final TextEditingController productPrice = TextEditingController();
 
-  Future getImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final image = await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
     if (image != null) {
-      imagePath.value = image.path.toString();
+      final Uint8List bytes = await image.readAsBytes();
+      imageBytes.value = bytes;
     }
   }
 }
