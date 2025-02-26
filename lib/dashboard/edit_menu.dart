@@ -55,7 +55,7 @@ class EditMenu extends StatelessWidget {
                                 const TextStyle(fontWeight: FontWeight.bold)),
                         Text(data[index].productCategory,
                             style: const TextStyle(color: Colors.grey)),
-                        Text("\$${data[index].price}",
+                        Text("RS:${data[index].price}",
                             style: const TextStyle(color: Colors.green)),
                         const SizedBox(
                           height: 10,

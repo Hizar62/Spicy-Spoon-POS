@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:spicyspoon/controller/keyboard_controller.dart';
+import 'package:spicyspoon/controller/order_checkout_controller.dart';
 
 import '../boxes/boxes.dart';
 import '../model/menu_model.dart';
@@ -24,6 +25,8 @@ class _OrderState extends State<Order> {
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
     final KeyboardController keyboardController = Get.put(KeyboardController());
+    final OrderCheckoutController orderCheckoutController =
+        Get.put(OrderCheckoutController());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -50,24 +53,30 @@ class _OrderState extends State<Order> {
                       itemBuilder: (context, index) {
                         Uint8List? imageBytes = data[index].productImage;
 
-                        return Card(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              imageBytes != null
-                                  ? Image.memory(imageBytes,
-                                      height: 100, fit: BoxFit.cover)
-                                  : const Icon(Icons.image_not_supported,
-                                      size: 100),
-                              const SizedBox(height: 8),
-                              Text(data[index].productName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              Text(data[index].productCategory,
-                                  style: const TextStyle(color: Colors.grey)),
-                              Text("\$${data[index].price}",
-                                  style: const TextStyle(color: Colors.green)),
-                            ],
+                        return GestureDetector(
+                          onTap: () {
+                            orderCheckoutController.addToCheckout(data[index]);
+                          },
+                          child: Card(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                imageBytes != null
+                                    ? Image.memory(imageBytes,
+                                        height: 100, fit: BoxFit.cover)
+                                    : const Icon(Icons.image_not_supported,
+                                        size: 100),
+                                const SizedBox(height: 8),
+                                Text(data[index].productName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                Text(data[index].productCategory,
+                                    style: const TextStyle(color: Colors.grey)),
+                                Text("RS:${data[index].price}",
+                                    style:
+                                        const TextStyle(color: Colors.green)),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -75,15 +84,80 @@ class _OrderState extends State<Order> {
                   },
                 ),
               ),
-              Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 0.5)),
-                  height: screenHeight * 0.2,
-                  child: const Center(
-                    child: Text(
-                      'Checkout Order',
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8.0, bottom: 2.0),
+                      child: Text(
+                        "Checkout Order",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16, // Adjust font size as needed
+                        ),
+                      ),
                     ),
-                  )),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 0.5),
+                    ),
+                    height: screenHeight * 0.25,
+                    child: Center(
+                      child: Obx(() {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: orderCheckoutController
+                                        .selectedMenuModel.value ==
+                                    null
+                                ? 0
+                                : 1,
+                            itemBuilder: (context, index) {
+                              Uint8List? imageBytes = orderCheckoutController
+                                  .selectedMenuModel.value?.productImage;
+                              return Card(
+                                margin: const EdgeInsets.all(8),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    imageBytes != null
+                                        ? Image.memory(imageBytes,
+                                            height: 70, fit: BoxFit.cover)
+                                        : const Icon(Icons.image_not_supported,
+                                            size: 70),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      orderCheckoutController
+                                          .selectedMenuModel.value!.productName,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      orderCheckoutController.selectedMenuModel
+                                          .value!.productCategory,
+                                      style:
+                                          const TextStyle(color: Colors.grey),
+                                    ),
+                                    Text(
+                                      "RS:${orderCheckoutController.selectedMenuModel.value!.price}",
+                                      style:
+                                          const TextStyle(color: Colors.green),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
