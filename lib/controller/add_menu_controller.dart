@@ -11,6 +11,7 @@ class AddMenuController extends GetxController {
   final TextEditingController productCategory = TextEditingController();
   final TextEditingController productPrice = TextEditingController();
   RxBool isLoading = false.obs;
+  var selectedMenuModel = Rxn<MenuModel>();
 
   Future<void> getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -69,20 +70,28 @@ class AddMenuController extends GetxController {
     await menuModel.delete();
   }
 
-  void editData(MenuModel menuModel, Uint8List image, String name,
+  void fetchIntoFields(MenuModel menuModel, Uint8List image, String name,
       String category, String price) async {
-    isLoading.value = true;
+    selectedMenuModel.value = menuModel;
     imageBytes.value = image;
     productName.text = name;
     productCategory.text = category;
     productPrice.text = price;
-    try {
-      menuModel.productImage = imageBytes.value;
-      menuModel.productName = productName.text.toString();
-      menuModel.productCategory = productCategory.text.toString();
-      menuModel.price = productPrice.text.toString();
+  }
 
-      await menuModel.save();
+  void editData() async {
+    try {
+      if (selectedMenuModel.value == null) {
+        Get.snackbar('Error', 'No product selected for editing.');
+        return;
+      }
+      selectedMenuModel.value!.productImage = imageBytes.value;
+      selectedMenuModel.value!.productName = productName.text.toString();
+      selectedMenuModel.value!.productCategory =
+          productCategory.text.toString();
+      selectedMenuModel.value!.price = productPrice.text.toString();
+
+      await selectedMenuModel.value!.save();
       Get.snackbar("Success", "Product Edit successfully!",
           snackPosition: SnackPosition.TOP);
       imageBytes.value = null;
@@ -91,7 +100,6 @@ class AddMenuController extends GetxController {
       productPrice.clear();
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      print(e.toString());
     } finally {
       isLoading.value = false;
     }

@@ -65,7 +65,7 @@ class EditMenu extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () {
-                                controller.editData(
+                                controller.fetchIntoFields(
                                     data[index],
                                     imageBytes,
                                     data[index].productName,
@@ -214,7 +214,9 @@ class EditMenu extends StatelessWidget {
                         ),
                         backgroundColor: utils.primaryColor,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.editData();
+                      },
                       child: Text(
                         'Edit',
                         style: TextStyle(
