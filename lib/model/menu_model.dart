@@ -13,12 +13,15 @@ class MenuModel extends HiveObject {
   String productCategory;
   @HiveField(3)
   String price;
+  @HiveField(4)
+  int quantity;
 
   MenuModel(
       {required this.productImage,
       required this.productName,
       required this.productCategory,
-      required this.price});
+      required this.price,
+      this.quantity = 1});
 
   MenuModel copyWith({
     Uint8List? productImage,

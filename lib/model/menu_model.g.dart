@@ -21,13 +21,14 @@ class MenuModelAdapter extends TypeAdapter<MenuModel> {
       productName: fields[1] as String,
       productCategory: fields[2] as String,
       price: fields[3] as String,
+      quantity: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, MenuModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.productImage)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class MenuModelAdapter extends TypeAdapter<MenuModel> {
       ..writeByte(2)
       ..write(obj.productCategory)
       ..writeByte(3)
-      ..write(obj.price);
+      ..write(obj.price)
+      ..writeByte(4)
+      ..write(obj.quantity);
   }
 
   @override

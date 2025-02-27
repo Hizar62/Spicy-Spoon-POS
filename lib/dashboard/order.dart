@@ -158,7 +158,31 @@ class _OrderState extends State<Order> {
                                         icon: const Icon(
                                           Icons.cancel,
                                           color: Colors.red,
-                                        )))
+                                        ))),
+                                Positioned(
+                                  top: 5.0,
+                                  left: 1.0,
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                          size: 24,
+                                        ),
+                                        Text(
+                                          menuModel.quantity.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
                               ]);
                             },
                           ),
@@ -179,15 +203,12 @@ class _OrderState extends State<Order> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 const Text(
                   'Quantity',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.1,
                 ),
                 Obx(() {
                   return Container(
@@ -208,7 +229,7 @@ class _OrderState extends State<Order> {
                 }),
                 SizedBox(
                   width: 300,
-                  height: 400,
+                  height: 300,
                   child: NumericKeyboard(
                     onKeyboardTap: keyboardController.onKeyboardTap,
                     textColor: Colors.black,
@@ -224,13 +245,45 @@ class _OrderState extends State<Order> {
                       color: Colors.red,
                       size: 30,
                     ),
-                    leftButtonFn: () {},
-                    leftIcon: const Icon(
-                      Icons.check_circle_outline_outlined,
-                      color: Colors.green,
-                      size: 30,
-                    ),
                   ),
+                ),
+                const Text(
+                  'Net Total',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green),
+                ),
+                Obx(() {
+                  return SizedBox(
+                    width: screenWidth * 0.25,
+                    child: Center(
+                      child: Text(
+                        'RS = ${orderCheckoutController.total.value.toString()}',
+                        style: const TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(
+                  height: 30,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.85,
+                  height: screenHeight * 0.09,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        'Order Checkout',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      )),
                 ),
               ],
             ),
