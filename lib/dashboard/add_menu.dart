@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:spicyspoon/boxes/boxes.dart';
 import 'package:spicyspoon/controller/add_menu_controller.dart';
 import 'package:spicyspoon/model/menu_model.dart';

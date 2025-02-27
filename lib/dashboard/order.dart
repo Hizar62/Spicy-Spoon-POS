@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:spicyspoon/controller/keyboard_controller.dart';
@@ -111,45 +110,56 @@ class _OrderState extends State<Order> {
                           width: double.infinity,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: orderCheckoutController
-                                        .selectedMenuModel.value ==
-                                    null
-                                ? 0
-                                : 1,
+                            itemCount:
+                                orderCheckoutController.checkOutList.length,
                             itemBuilder: (context, index) {
-                              Uint8List? imageBytes = orderCheckoutController
-                                  .selectedMenuModel.value?.productImage;
-                              return Card(
-                                margin: const EdgeInsets.all(8),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    imageBytes != null
-                                        ? Image.memory(imageBytes,
-                                            height: 70, fit: BoxFit.cover)
-                                        : const Icon(Icons.image_not_supported,
-                                            size: 70),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      orderCheckoutController
-                                          .selectedMenuModel.value!.productName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      orderCheckoutController.selectedMenuModel
-                                          .value!.productCategory,
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    ),
-                                    Text(
-                                      "RS:${orderCheckoutController.selectedMenuModel.value!.price}",
-                                      style:
-                                          const TextStyle(color: Colors.green),
-                                    ),
-                                  ],
+                              final menuModel =
+                                  orderCheckoutController.checkOutList[index];
+                              Uint8List? imageBytes = menuModel.productImage;
+                              return Stack(children: [
+                                Card(
+                                  margin: const EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      imageBytes != null
+                                          ? Image.memory(imageBytes,
+                                              height: 70, fit: BoxFit.cover)
+                                          : const Icon(
+                                              Icons.image_not_supported,
+                                              size: 70),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        menuModel.productName,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        menuModel.productCategory,
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      ),
+                                      Text(
+                                        "RS:${menuModel.price}",
+                                        style: const TextStyle(
+                                            color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
+                                Positioned(
+                                    top: 5.0,
+                                    right: 1.0,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          orderCheckoutController
+                                              .removeToCheckout(menuModel);
+                                        },
+                                        icon: const Icon(
+                                          Icons.cancel,
+                                          color: Colors.red,
+                                        )))
+                              ]);
                             },
                           ),
                         );

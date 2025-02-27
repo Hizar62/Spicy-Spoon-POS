@@ -3,13 +3,13 @@ import 'package:spicyspoon/model/menu_model.dart';
 
 class OrderCheckoutController extends GetxController {
   var quantity = 0.obs;
-  var selectedMenuModel = Rxn<MenuModel>();
+  var checkOutList = <MenuModel>[].obs;
 
   void addToCheckout(MenuModel menuModel) {
-    selectedMenuModel.value = menuModel;
+    checkOutList.add(menuModel);
   }
 
   void removeToCheckout(MenuModel menuModel) {
-    selectedMenuModel.value == null;
+    checkOutList.remove(menuModel);
   }
 }
