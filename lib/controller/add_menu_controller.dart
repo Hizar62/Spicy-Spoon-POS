@@ -12,6 +12,13 @@ class AddMenuController extends GetxController {
   final TextEditingController productPrice = TextEditingController();
   RxBool isLoading = false.obs;
   var selectedMenuModel = Rxn<MenuModel>();
+  var category = <String>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadCategories();
+  }
 
   Future<void> getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -50,6 +57,10 @@ class AddMenuController extends GetxController {
       final box = Boxes.getData();
       box.add(data);
       data.save();
+
+      if (!category.contains(data.productCategory)) {
+        category.add(data.productCategory);
+      }
 
       imageBytes.value = null;
       productName.clear();
@@ -103,5 +114,14 @@ class AddMenuController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void loadCategories() {
+    final box = Boxes.getData();
+    var data = box.values.toList().cast<MenuModel>();
+
+    var uniqueCategories =
+        data.map((item) => item.productCategory).toSet().toList();
+    category.assignAll(uniqueCategories);
   }
 }

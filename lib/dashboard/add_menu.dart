@@ -23,45 +23,74 @@ class AddMenu extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ValueListenableBuilder<Box<MenuModel>>(
-            valueListenable: Boxes.getData().listenable(),
-            builder: (context, box, _) {
-              var data = box.values.toList().cast<MenuModel>();
-
-              return GridView.builder(
-                padding: const EdgeInsets.all(10.0),
-                itemCount: data.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                  childAspectRatio: 0.9,
-                ),
-                itemBuilder: (context, index) {
-                  Uint8List? imageBytes = data[index].productImage;
-
-                  return Card(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        imageBytes != null
-                            ? Image.memory(imageBytes,
-                                height: 100, fit: BoxFit.cover)
-                            : const Icon(Icons.image_not_supported, size: 100),
-                        const SizedBox(height: 8),
-                        Text(data[index].productName,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        Text(data[index].productCategory,
-                            style: const TextStyle(color: Colors.grey)),
-                        Text("RS:${data[index].price}",
-                            style: const TextStyle(color: Colors.green)),
-                      ],
-                    ),
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Obx(() {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.category.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            controller.category[index],
+                            style: const TextStyle(
+                                color: Colors.black), // Ensure text is visible
+                          ),
+                        ),
+                      );
+                    },
                   );
-                },
-              );
-            },
+                }),
+              ),
+              Expanded(
+                child: ValueListenableBuilder<Box<MenuModel>>(
+                  valueListenable: Boxes.getData().listenable(),
+                  builder: (context, box, _) {
+                    var data = box.values.toList().cast<MenuModel>();
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: data.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 5.0,
+                        childAspectRatio: 0.9,
+                      ),
+                      itemBuilder: (context, index) {
+                        Uint8List? imageBytes = data[index].productImage;
+
+                        return Card(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              imageBytes != null
+                                  ? Image.memory(imageBytes,
+                                      height: 100, fit: BoxFit.cover)
+                                  : const Icon(Icons.image_not_supported,
+                                      size: 100),
+                              const SizedBox(height: 8),
+                              Text(data[index].productName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              Text(data[index].productCategory,
+                                  style: const TextStyle(color: Colors.grey)),
+                              Text("RS:${data[index].price}",
+                                  style: const TextStyle(color: Colors.green)),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         Container(
