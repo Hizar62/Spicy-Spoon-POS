@@ -35,11 +35,12 @@ class EditMenu extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        addMenuController.setCategory(addMenuController.category[index]);
+                      },
                       child: Text(
                         addMenuController.category[index],
-                        style: const TextStyle(
-                            color: Colors.black), // Ensure text is visible
+                        style: const TextStyle(color: Colors.black), // Ensure text is visible
                       ),
                     ),
                   );
@@ -51,80 +52,84 @@ class EditMenu extends StatelessWidget {
             child: ValueListenableBuilder<Box<MenuModel>>(
               valueListenable: Boxes.getData().listenable(),
               builder: (context, box, _) {
-                var data = box.values.toList().cast<MenuModel>();
+                return Obx(() {
+                  var data = box.values.toList().cast<MenuModel>();
+                  var filteredData = addMenuController.selectedCategory.value.isEmpty
+                      ? data
+                      : data
+                          .where((item) =>
+                              item.productCategory.trim().toLowerCase() ==
+                              addMenuController.selectedCategory.value.trim().toLowerCase())
+                          .toList();
 
-                return GridView.builder(
-                  padding: const EdgeInsets.all(10.0),
-                  itemCount: data.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
-                    childAspectRatio: 0.7,
-                  ),
-                  itemBuilder: (context, index) {
-                    Uint8List imageBytes =
-                        data[index].productImage ?? Uint8List(0);
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(10.0),
+                    itemCount: filteredData.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      crossAxisSpacing: 5.0,
+                      mainAxisSpacing: 5.0,
+                      childAspectRatio: 0.7,
+                    ),
+                    itemBuilder: (context, index) {
+                      Uint8List imageBytes = filteredData[index].productImage ?? Uint8List(0);
 
-                    return Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // ignore: unnecessary_null_comparison
-                          imageBytes != null
-                              ? Image.memory(imageBytes,
-                                  height: 100, fit: BoxFit.cover)
-                              : const Icon(Icons.image_not_supported,
-                                  size: 100),
-                          const SizedBox(height: 8),
-                          Text(data[index].productName,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(data[index].productCategory,
-                              style: const TextStyle(color: Colors.grey)),
-                          Text("RS:${data[index].price}",
-                              style: const TextStyle(color: Colors.green)),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  controller.fetchIntoFields(
-                                      data[index],
-                                      imageBytes,
-                                      data[index].productName,
-                                      data[index].productCategory,
-                                      data[index].price);
-                                },
-                                icon: const Icon(Icons.edit),
-                                color: Colors.green,
-                                tooltip: "Edit Item",
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  controller.delete(data[index]);
-                                },
-                                icon: const Icon(Icons.delete),
-                                color: Colors.red,
-                                tooltip: "Delete Item",
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
+                      return Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            
+                            imageBytes != null
+                                ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
+                                : const Icon(Icons.image_not_supported, size: 100),
+                            const SizedBox(height: 8),
+                            Text(filteredData[index].productName,
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(filteredData[index].productCategory,
+                                style: const TextStyle(color: Colors.grey)),
+                            Text("RS:${filteredData[index].price}",
+                                style: const TextStyle(color: Colors.green)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    controller.fetchIntoFields(
+                                        data[index],
+                                        imageBytes,
+                                        data[index].productName,
+                                        data[index].productCategory,
+                                        data[index].price);
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                  color: Colors.green,
+                                  tooltip: "Edit Item",
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    controller.delete(data[index]);
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red,
+                                  tooltip: "Delete Item",
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                });
               },
             ),
           ),
         ])),
         Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.5)),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
           width: screenWidth * 0.25,
           height: screenHeight,
           child: Padding(
@@ -155,8 +160,7 @@ class EditMenu extends StatelessWidget {
                               controller.imageBytes.value!,
                               fit: BoxFit.contain,
                             )
-                          : const Icon(Icons.camera_alt,
-                              size: 40, color: Colors.grey),
+                          : const Icon(Icons.camera_alt, size: 40, color: Colors.grey),
                     );
                   }),
                 ),

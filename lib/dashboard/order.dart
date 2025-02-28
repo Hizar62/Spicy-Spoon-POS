@@ -25,8 +25,7 @@ class _OrderState extends State<Order> {
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
     final KeyboardController keyboardController = Get.put(KeyboardController());
-    final OrderCheckoutController orderCheckoutController =
-        Get.put(OrderCheckoutController());
+    final OrderCheckoutController orderCheckoutController = Get.put(OrderCheckoutController());
     final AddMenuController controller = Get.put(AddMenuController());
 
     return Row(
@@ -45,11 +44,12 @@ class _OrderState extends State<Order> {
                     itemBuilder: (context, index) {
                       return Card(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.setCategory(controller.category[index]);
+                          },
                           child: Text(
                             controller.category[index],
-                            style: const TextStyle(
-                                color: Colors.black), // Ensure text is visible
+                            style: const TextStyle(color: Colors.black), 
                           ),
                         ),
                       );
@@ -58,65 +58,58 @@ class _OrderState extends State<Order> {
                 }),
               ),
               Expanded(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: ValueListenableBuilder<Box<MenuModel>>(
-                          valueListenable: Boxes.getData().listenable(),
-                          builder: (context, box, _) {
-                            var data = box.values.toList().cast<MenuModel>();
+                child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Expanded(
+                    child: ValueListenableBuilder<Box<MenuModel>>(
+                      valueListenable: Boxes.getData().listenable(),
+                      builder: (context, box, _) {
+                        return Obx(() {
+                          var data = box.values.toList().cast<MenuModel>();
 
-                            return GridView.builder(
-                              padding: const EdgeInsets.all(10.0),
-                              itemCount: data.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                crossAxisSpacing: 5.0,
-                                mainAxisSpacing: 5.0,
-                                childAspectRatio: 0.9,
-                              ),
-                              itemBuilder: (context, index) {
-                                Uint8List? imageBytes =
-                                    data[index].productImage;
+                          var filteredData = controller.selectedCategory.value.isEmpty
+                              ? data
+                              : data
+                                  .where((item) =>
+                                      item.productCategory.trim().toLowerCase() ==
+                                      controller.selectedCategory.value.trim().toLowerCase())
+                                  .toList();
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    orderCheckoutController
-                                        .addToCheckout(data[index]);
-                                  },
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        imageBytes != null
-                                            ? Image.memory(imageBytes,
-                                                height: 100, fit: BoxFit.cover)
-                                            : const Icon(
-                                                Icons.image_not_supported,
-                                                size: 100),
-                                        const SizedBox(height: 8),
-                                        Text(data[index].productName,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Text(data[index].productCategory,
-                                            style: const TextStyle(
-                                                color: Colors.grey)),
-                                        Text("RS:${data[index].price}",
-                                            style: const TextStyle(
-                                                color: Colors.green)),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ]),
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(10.0),
+                            itemCount: filteredData.length,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 5,
+                              crossAxisSpacing: 5.0,
+                              mainAxisSpacing: 5.0,
+                              childAspectRatio: 0.9,
+                            ),
+                            itemBuilder: (context, index) {
+                              Uint8List? imageBytes = filteredData[index].productImage;
+
+                              return Card(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    imageBytes != null
+                                        ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
+                                        : const Icon(Icons.image_not_supported, size: 100),
+                                    const SizedBox(height: 8),
+                                    Text(filteredData[index].productName,
+                                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(filteredData[index].productCategory,
+                                        style: const TextStyle(color: Colors.grey)),
+                                    Text("RS:${filteredData[index].price}",
+                                        style: const TextStyle(color: Colors.green)),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                ]),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,11 +138,9 @@ class _OrderState extends State<Order> {
                           width: double.infinity,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount:
-                                orderCheckoutController.checkOutList.length,
+                            itemCount: orderCheckoutController.checkOutList.length,
                             itemBuilder: (context, index) {
-                              final menuModel =
-                                  orderCheckoutController.checkOutList[index];
+                              final menuModel = orderCheckoutController.checkOutList[index];
                               Uint8List? imageBytes = menuModel.productImage;
                               return Stack(children: [
                                 Card(
@@ -158,26 +149,20 @@ class _OrderState extends State<Order> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       imageBytes != null
-                                          ? Image.memory(imageBytes,
-                                              height: 70, fit: BoxFit.cover)
-                                          : const Icon(
-                                              Icons.image_not_supported,
-                                              size: 70),
+                                          ? Image.memory(imageBytes, height: 70, fit: BoxFit.cover)
+                                          : const Icon(Icons.image_not_supported, size: 70),
                                       const SizedBox(height: 2),
                                       Text(
                                         menuModel.productName,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         menuModel.productCategory,
-                                        style:
-                                            const TextStyle(color: Colors.grey),
+                                        style: const TextStyle(color: Colors.grey),
                                       ),
                                       Text(
                                         "RS:${menuModel.price}",
-                                        style: const TextStyle(
-                                            color: Colors.green),
+                                        style: const TextStyle(color: Colors.green),
                                       ),
                                     ],
                                   ),
@@ -187,8 +172,7 @@ class _OrderState extends State<Order> {
                                     right: 1.0,
                                     child: IconButton(
                                         onPressed: () {
-                                          orderCheckoutController
-                                              .removeToCheckout(menuModel);
+                                          orderCheckoutController.removeToCheckout(menuModel);
                                         },
                                         icon: const Icon(
                                           Icons.cancel,
@@ -231,8 +215,7 @@ class _OrderState extends State<Order> {
           ),
         ),
         Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.5)),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
           width: screenWidth * 0.25,
           height: screenHeight,
           child: Padding(
@@ -270,9 +253,8 @@ class _OrderState extends State<Order> {
                     textColor: Colors.black,
                     rightButtonFn: () {
                       if (keyboardController.text.value.isNotEmpty) {
-                        keyboardController.text.value =
-                            keyboardController.text.value.substring(
-                                0, keyboardController.text.value.length - 1);
+                        keyboardController.text.value = keyboardController.text.value
+                            .substring(0, keyboardController.text.value.length - 1);
                       }
                     },
                     rightIcon: const Icon(
@@ -284,10 +266,7 @@ class _OrderState extends State<Order> {
                 ),
                 const Text(
                   'Net Total',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.green),
                 ),
                 Obx(() {
                   return SizedBox(
@@ -295,8 +274,7 @@ class _OrderState extends State<Order> {
                     child: Center(
                       child: Text(
                         'RS = ${orderCheckoutController.total.value.toString()}',
-                        style: const TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
@@ -315,9 +293,7 @@ class _OrderState extends State<Order> {
                       child: const Text(
                         'Order Checkout',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                       )),
                 ),
               ],

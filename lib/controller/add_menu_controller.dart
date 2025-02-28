@@ -13,6 +13,7 @@ class AddMenuController extends GetxController {
   RxBool isLoading = false.obs;
   var selectedMenuModel = Rxn<MenuModel>();
   var category = <String>[].obs;
+  var selectedCategory = "".obs;  
 
   @override
   void onInit() {
@@ -39,11 +40,8 @@ class AddMenuController extends GetxController {
         return;
       }
 
-      if (productName.text.isEmpty ||
-          productCategory.text.isEmpty ||
-          productPrice.text.isEmpty) {
-        Get.snackbar("Error", "All fields are required!",
-            snackPosition: SnackPosition.TOP);
+      if (productName.text.isEmpty || productCategory.text.isEmpty || productPrice.text.isEmpty) {
+        Get.snackbar("Error", "All fields are required!", snackPosition: SnackPosition.TOP);
         return;
       }
 
@@ -67,8 +65,7 @@ class AddMenuController extends GetxController {
       productCategory.clear();
       productPrice.clear();
 
-      Get.snackbar("Success", "Product saved successfully!",
-          snackPosition: SnackPosition.TOP);
+      Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
     } catch (e) {
       Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.redAccent, colorText: Colors.white);
@@ -81,8 +78,8 @@ class AddMenuController extends GetxController {
     await menuModel.delete();
   }
 
-  void fetchIntoFields(MenuModel menuModel, Uint8List image, String name,
-      String category, String price) async {
+  void fetchIntoFields(
+      MenuModel menuModel, Uint8List image, String name, String category, String price) async {
     selectedMenuModel.value = menuModel;
     imageBytes.value = image;
     productName.text = name;
@@ -98,13 +95,11 @@ class AddMenuController extends GetxController {
       }
       selectedMenuModel.value!.productImage = imageBytes.value;
       selectedMenuModel.value!.productName = productName.text.toString();
-      selectedMenuModel.value!.productCategory =
-          productCategory.text.toString();
+      selectedMenuModel.value!.productCategory = productCategory.text.toString();
       selectedMenuModel.value!.price = productPrice.text.toString();
 
       await selectedMenuModel.value!.save();
-      Get.snackbar("Success", "Product Edit successfully!",
-          snackPosition: SnackPosition.TOP);
+      Get.snackbar("Success", "Product Edit successfully!", snackPosition: SnackPosition.TOP);
       imageBytes.value = null;
       productName.clear();
       productCategory.clear();
@@ -120,8 +115,11 @@ class AddMenuController extends GetxController {
     final box = Boxes.getData();
     var data = box.values.toList().cast<MenuModel>();
 
-    var uniqueCategories =
-        data.map((item) => item.productCategory).toSet().toList();
+    var uniqueCategories = data.map((item) => item.productCategory).toSet().toList();
     category.assignAll(uniqueCategories);
+  }
+
+  void setCategory(String category) {
+    selectedCategory.value = category;
   }
 }
