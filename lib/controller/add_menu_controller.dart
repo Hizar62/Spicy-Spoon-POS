@@ -13,7 +13,7 @@ class AddMenuController extends GetxController {
   RxBool isLoading = false.obs;
   var selectedMenuModel = Rxn<MenuModel>();
   var category = <String>[].obs;
-  var selectedCategory = "".obs;  
+  var selectedCategory = "".obs;
 
   @override
   void onInit() {
@@ -76,6 +76,7 @@ class AddMenuController extends GetxController {
 
   void delete(MenuModel menuModel) async {
     await menuModel.delete();
+    loadCategories();
   }
 
   void fetchIntoFields(

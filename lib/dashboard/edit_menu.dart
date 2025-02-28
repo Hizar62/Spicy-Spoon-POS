@@ -79,6 +79,7 @@ class EditMenu extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             
+                            // ignore: unnecessary_null_comparison
                             imageBytes != null
                                 ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
                                 : const Icon(Icons.image_not_supported, size: 100),

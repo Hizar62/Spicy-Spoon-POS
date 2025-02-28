@@ -49,7 +49,7 @@ class _OrderState extends State<Order> {
                           },
                           child: Text(
                             controller.category[index],
-                            style: const TextStyle(color: Colors.black), 
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ),
                       );
@@ -86,21 +86,26 @@ class _OrderState extends State<Order> {
                             itemBuilder: (context, index) {
                               Uint8List? imageBytes = filteredData[index].productImage;
 
-                              return Card(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    imageBytes != null
-                                        ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
-                                        : const Icon(Icons.image_not_supported, size: 100),
-                                    const SizedBox(height: 8),
-                                    Text(filteredData[index].productName,
-                                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    Text(filteredData[index].productCategory,
-                                        style: const TextStyle(color: Colors.grey)),
-                                    Text("RS:${filteredData[index].price}",
-                                        style: const TextStyle(color: Colors.green)),
-                                  ],
+                              return GestureDetector(
+                                onTap: () {
+                                  orderCheckoutController.addToCheckout(filteredData[index]);
+                                },
+                                child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      imageBytes != null
+                                          ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
+                                          : const Icon(Icons.image_not_supported, size: 100),
+                                      const SizedBox(height: 8),
+                                      Text(filteredData[index].productName,
+                                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      Text(filteredData[index].productCategory,
+                                          style: const TextStyle(color: Colors.grey)),
+                                      Text("RS:${filteredData[index].price}",
+                                          style: const TextStyle(color: Colors.green)),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
