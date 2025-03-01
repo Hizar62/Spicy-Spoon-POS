@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:spicyspoon/model/deal_model.dart';
 
 import '../boxes/boxes.dart';
 import '../model/menu_model.dart';
@@ -16,7 +17,7 @@ class AddDealController extends GetxController {
   var selectProduct = <MultiSelectItem<String>>[].obs;
   var selectedProduct = <String>[].obs;
   RxBool isLoading = false.obs;
-  var selectedMenuModel = Rxn<MenuModel>();
+  var selectedDealModel = Rxn<DealModel>();
   var category = <String>[].obs;
   var selectedCategory = "".obs;
 
@@ -41,7 +42,8 @@ class AddDealController extends GetxController {
     try {
       isLoading.value = true;
       if (imageBytes.value == null) {
-        Get.snackbar("Error", "Please select an image before saving!", snackPosition: SnackPosition.TOP);
+        Get.snackbar("Error", "Please select an image before saving!",
+            snackPosition: SnackPosition.TOP);
         return;
       }
 
@@ -50,62 +52,65 @@ class AddDealController extends GetxController {
         return;
       }
 
-      final data = MenuModel(
-        productImage: imageBytes.value!,
-        productName: dealName.text,
-        productCategory: dealCategory.text,
-        price: dealPrice.text,
+      final data = DealModel(
+        dealImage: imageBytes.value!,
+        dealName: dealName.text,
+        dealCategory: dealCategory.text,
+        selectedProduct: selectedProduct.toList(),
+        dealprice: dealPrice.text,
       );
 
-      final box = Boxes.getData();
+      final box = Boxes.getDealData();
       box.add(data);
       data.save();
 
-      if (!category.contains(data.productCategory)) {
-        category.add(data.productCategory);
-      }
-
       imageBytes.value = null;
       dealName.clear();
+      selectedProduct.clear();
       dealCategory.clear();
       dealPrice.clear();
 
       Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
     } catch (e) {
-      Get.snackbar('Error', e.toString(), backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: Colors.redAccent, colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }
   }
 
-  void delete(MenuModel menuModel) async {
-    await menuModel.delete();
+  void delete(DealModel dealModel) async {
+    await dealModel.delete();
     loadCategories();
   }
 
-  void fetchIntoFields(MenuModel menuModel, Uint8List image, String name, String category, String price) async {
-    selectedMenuModel.value = menuModel;
+  void fetchIntoFields(DealModel dealModel, Uint8List image, String name, List selectedItems,
+      String category, String dealprice) async {
+    selectedDealModel.value = dealModel;
     imageBytes.value = image;
     dealName.text = name;
+    selectedProduct.value = selectedItems as List<String>;
     dealCategory.text = category;
-    dealPrice.text = price;
+    dealPrice.text = dealprice;
   }
 
   void editData() async {
     try {
-      if (selectedMenuModel.value == null) {
+      if (selectedDealModel.value == null) {
         Get.snackbar('Error', 'No product selected for editing.');
         return;
       }
-      selectedMenuModel.value!.productImage = imageBytes.value;
-      selectedMenuModel.value!.productName = dealName.text.toString();
-      selectedMenuModel.value!.productCategory = dealCategory.text.toString();
-      selectedMenuModel.value!.price = dealPrice.text.toString();
+      selectedDealModel.value!.dealImage = imageBytes.value;
+      selectedDealModel.value!.dealName = dealName.text.toString();
+      selectedDealModel.value!.dealCategory = dealCategory.text.toString();
+      selectedDealModel.value!.selectedProduct = selectedProduct.toList();
+      selectedDealModel.value!.dealprice = dealPrice.text.toString();
 
-      await selectedMenuModel.value!.save();
+      await selectedDealModel.value!.save();
       Get.snackbar("Success", "Product Edit successfully!", snackPosition: SnackPosition.TOP);
       imageBytes.value = null;
       dealName.clear();
+      selectedProduct.clear();
       dealCategory.clear();
       dealPrice.clear();
     } catch (e) {
@@ -116,10 +121,10 @@ class AddDealController extends GetxController {
   }
 
   void loadCategories() {
-    final box = Boxes.getData();
-    var data = box.values.toList().cast<MenuModel>();
+    final box = Boxes.getDealData();
+    var data = box.values.toList().cast<DealModel>();
 
-    var uniqueCategories = data.map((item) => item.productCategory).toSet().toList();
+    var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
     category.assignAll(uniqueCategories);
   }
 
@@ -132,7 +137,7 @@ class AddDealController extends GetxController {
     selectProduct.assignAll(
       uniqueProducts.map((product) => MultiSelectItem(product, product)).toList(),
     );
-    
+    print(uniqueProducts);
   }
 
   void setCategory(String category) {

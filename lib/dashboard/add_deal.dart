@@ -1,6 +1,10 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:spicyspoon/model/deal_model.dart';
+import '../boxes/boxes.dart';
 import '../controller/add_deal_controller.dart';
 import '../utils/utils.dart';
 
@@ -18,8 +22,47 @@ class AddDeal extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Container(),
+          child: ValueListenableBuilder<Box<DealModel>>(
+            valueListenable: Boxes.getDealData().listenable(),
+            builder: (context, box, _) {
+              var data = box.values.toList().cast<DealModel>(); // Get data directly
+
+              return GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                itemCount: data.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  childAspectRatio: 0.9,
+                ),
+                itemBuilder: (context, index) {
+                  Uint8List? imageBytes = data[index].dealImage;
+
+                  return Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        imageBytes != null
+                            ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
+                            : const Icon(Icons.image_not_supported, size: 100),
+                        const SizedBox(height: 8),
+                        Text(data[index].dealName,
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(data[index].selectedProduct.toString(),
+                            style: const TextStyle(color: Colors.black)),
+                        Text(data[index].dealCategory, style: const TextStyle(color: Colors.grey)),
+                        Text("RS:${data[index].dealprice}",
+                            style: const TextStyle(color: Colors.green)),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
+
         Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
           width: screenWidth * 0.25,

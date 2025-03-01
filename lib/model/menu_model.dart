@@ -37,3 +37,4 @@ class MenuModel extends HiveObject {
     );
   }
 }
+

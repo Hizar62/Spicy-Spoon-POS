@@ -3,14 +3,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:spicyspoon/boxes/boxes.dart';
-import 'package:spicyspoon/controller/add_menu_controller.dart';
+import 'package:spicyspoon/controller/add_deal_controller.dart';
+import 'package:spicyspoon/model/deal_model.dart';
+import 'package:spicyspoon/utils/utils.dart';
 
-import '../model/menu_model.dart';
-import '../utils/utils.dart';
-
-class EditMenu extends StatelessWidget {
-  const EditMenu({super.key});
+class EditDeal extends StatelessWidget {
+  const EditDeal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,116 +18,89 @@ class EditMenu extends StatelessWidget {
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
     final Utils utils = Utils();
-    final AddMenuController controller = Get.put(AddMenuController());
+    final AddDealController controller = Get.put(AddDealController());
 
     return Row(
       children: [
         Expanded(
-            child: Column(children: [
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: Obx(() {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.category.length,
+          child: ValueListenableBuilder<Box<DealModel>>(
+            valueListenable: Boxes.getDealData().listenable(),
+            builder: (context, box, _) {
+              var data = box.values.toList().cast<DealModel>();
+              // var filteredData = controller.selectedCategory.value.isEmpty
+              //     ? data
+              //     : data
+              //         .where((item) =>
+              //             item.productCategory.trim().toLowerCase() ==
+              //             addMenuController.selectedCategory.value.trim().toLowerCase())
+              //         .toList();
+
+              return GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                itemCount: data.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  childAspectRatio: 0.9,
+                ),
                 itemBuilder: (context, index) {
+                  Uint8List imageBytes = data[index].dealImage ?? Uint8List(0);
+
                   return Card(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        controller.setCategory(controller.category[index]);
-                      },
-                      child: Text(
-                        controller.category[index],
-                        style: const TextStyle(color: Colors.black), // Ensure text is visible
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ignore: unnecessary_null_comparison
+                        imageBytes != null
+                            ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
+                            : const Icon(Icons.image_not_supported, size: 100),
+                        const SizedBox(height: 8),
+                        Text(data[index].dealName,
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(data[index].selectedProduct.toString(),
+                            style: const TextStyle(color: Colors.black)),
+                        Text(data[index].dealCategory, style: const TextStyle(color: Colors.grey)),
+                        Text("RS:${data[index].dealprice}",
+                            style: const TextStyle(color: Colors.green)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                controller.fetchIntoFields(
+                                    data[index],
+                                    imageBytes,
+                                    data[index].dealName,
+                                    data[index].selectedProduct as List<String>,
+                                    data[index].dealCategory,
+                                    data[index].dealprice);
+                              },
+                              icon: const Icon(Icons.edit),
+                              color: Colors.green,
+                              tooltip: "Edit Item",
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                controller.delete(data[index]);
+                              },
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                              tooltip: "Delete Item",
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   );
                 },
               );
-            }),
+            },
           ),
-          Expanded(
-            child: ValueListenableBuilder<Box<MenuModel>>(
-              valueListenable: Boxes.getData().listenable(),
-              builder: (context, box, _) {
-                return Obx(() {
-                  var data = box.values.toList().cast<MenuModel>();
-                  var filteredData = controller.selectedCategory.value.isEmpty
-                      ? data
-                      : data
-                          .where((item) =>
-                              item.productCategory.trim().toLowerCase() ==
-                              controller.selectedCategory.value.trim().toLowerCase())
-                          .toList();
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    itemCount: filteredData.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
-                      childAspectRatio: 0.7,
-                    ),
-                    itemBuilder: (context, index) {
-                      Uint8List imageBytes = filteredData[index].productImage ?? Uint8List(0);
-
-                      return Card(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            
-                            // ignore: unnecessary_null_comparison
-                            imageBytes != null
-                                ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
-                                : const Icon(Icons.image_not_supported, size: 100),
-                            const SizedBox(height: 8),
-                            Text(filteredData[index].productName,
-                                style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Text(filteredData[index].productCategory,
-                                style: const TextStyle(color: Colors.grey)),
-                            Text("RS:${filteredData[index].price}",
-                                style: const TextStyle(color: Colors.green)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    controller.fetchIntoFields(
-                                        data[index],
-                                        imageBytes,
-                                        data[index].productName,
-                                        data[index].productCategory,
-                                        data[index].price);
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                  color: Colors.green,
-                                  tooltip: "Edit Item",
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    controller.delete(data[index]);
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                  color: Colors.red,
-                                  tooltip: "Delete Item",
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                });
-              },
-            ),
-          ),
-        ])),
+        ),
         Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
           width: screenWidth * 0.25,
@@ -167,7 +140,7 @@ class EditMenu extends StatelessWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   child: TextFormField(
-                    controller: controller.productName,
+                    controller: controller.dealName,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       labelText: 'Product Name',
@@ -189,8 +162,28 @@ class EditMenu extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
+                  child: Obx(() {
+                    return MultiSelectDialogField(
+                      items: controller.selectProduct.toList(),
+                      title: const Text("Select Products"),
+                      selectedColor: Colors.blue,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.black),
+                      ),
+                      buttonText: const Text("Select Products"),
+                      initialValue: controller.selectedProduct.toList(),
+                      onConfirm: (values) {
+                        controller.selectedProduct.assignAll(values.cast<String>());
+                      },
+                    );
+                  }),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
                   child: TextFormField(
-                    controller: controller.productCategory,
+                    controller: controller.dealCategory,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       labelText: 'Product Category',
@@ -213,7 +206,7 @@ class EditMenu extends StatelessWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   child: TextFormField(
-                    controller: controller.productPrice,
+                    controller: controller.dealPrice,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Product Price',
