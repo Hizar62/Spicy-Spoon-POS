@@ -187,7 +187,10 @@ class _OrderState extends State<Order> {
                                   top: 5.0,
                                   left: 1.0,
                                   child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      keyboardController
+                                          .onKeyboardTap(menuModel.quantity.toString());
+                                    },
                                     icon: Stack(
                                       alignment: Alignment.center,
                                       children: [

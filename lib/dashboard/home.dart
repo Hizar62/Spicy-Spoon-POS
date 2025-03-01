@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spicyspoon/controller/home_controller.dart';
+import 'package:spicyspoon/dashboard/add_deal.dart';
 import 'package:spicyspoon/dashboard/add_menu.dart';
 import 'package:spicyspoon/dashboard/edit_menu.dart';
 import 'package:spicyspoon/dashboard/order.dart';
@@ -20,6 +21,7 @@ class _HomeState extends State<Home> {
     Order(),
     AddMenu(),
     EditMenu(),
+    AddDeal(),
     SalesRecord()
   ];
 
@@ -51,6 +53,8 @@ class _HomeState extends State<Home> {
                         icon: Icon(Icons.add), label: 'Add Menu'),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.edit), label: 'Edit Menu'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.add_circle_outline_outlined), label: 'Add Deals'),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.history), label: 'Sales Record'),
                   ],
@@ -85,6 +89,13 @@ class _HomeState extends State<Home> {
                         child: Icon(Icons.edit),
                       ),
                       label: Text('Edit Menu'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        child: Icon(Icons.add_circle_outline_outlined),
+                      ),
+                      label: Text('Add Deals'),
                     ),
                     NavigationRailDestination(
                       icon: Padding(
