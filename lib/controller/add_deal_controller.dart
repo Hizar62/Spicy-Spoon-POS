@@ -137,7 +137,6 @@ class AddDealController extends GetxController {
     selectProduct.assignAll(
       uniqueProducts.map((product) => MultiSelectItem(product, product)).toList(),
     );
-    print(uniqueProducts);
   }
 
   void setCategory(String category) {

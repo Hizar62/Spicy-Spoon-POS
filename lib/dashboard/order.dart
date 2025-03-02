@@ -33,7 +33,15 @@ class _OrderState extends State<Order> {
       children: [
         Expanded(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 30,
+                child: Text(
+                  'Product Category',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -49,6 +57,37 @@ class _OrderState extends State<Order> {
                           },
                           child: Text(
                             controller.category[index],
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+              const SizedBox(
+                height: 30,
+                child: Text(
+                  'Deals',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Obx(() {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.dealCategory.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.setCategory(controller.dealCategory[index]);
+                          },
+                          child: Text(
+                            controller.dealCategory[index],
                             style: const TextStyle(color: Colors.black),
                           ),
                         ),

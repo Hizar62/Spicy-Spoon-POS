@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spicyspoon/boxes/boxes.dart';
+import 'package:spicyspoon/model/deal_model.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 
 class AddMenuController extends GetxController {
@@ -14,11 +15,14 @@ class AddMenuController extends GetxController {
   var selectedMenuModel = Rxn<MenuModel>();
   var category = <String>[].obs;
   var selectedCategory = "".obs;
+  var dealCategory = <String>[].obs;
+  var selectedDealCategory = "".obs;
 
   @override
   void onInit() {
     super.onInit();
     loadCategories();
+    loadDealCategories();
   }
 
   Future<void> getImage() async {
@@ -115,12 +119,24 @@ class AddMenuController extends GetxController {
   void loadCategories() {
     final box = Boxes.getData();
     var data = box.values.toList().cast<MenuModel>();
-
     var uniqueCategories = data.map((item) => item.productCategory).toSet().toList();
     category.assignAll(uniqueCategories);
+    print(category);
+  }
+
+  void loadDealCategories() {
+    final box = Boxes.getDealData();
+    var data = box.values.toList().cast<DealModel>();
+    var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
+    dealCategory.assignAll(uniqueCategories);
+    print(dealCategory);
   }
 
   void setCategory(String category) {
     selectedCategory.value = category;
+  }
+
+  void setDealCategory(String category) {
+    selectedDealCategory.value = category;
   }
 }
