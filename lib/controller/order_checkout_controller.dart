@@ -1,10 +1,13 @@
 import 'package:get/get.dart';
+import 'package:spicyspoon/dashboard/home.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 
+import '../boxes/boxes.dart';
+import '../model/checkout_model.dart';
+
 class OrderCheckoutController extends GetxController {
   var checkOutList = <dynamic>[].obs;
-
   var total = 0.obs;
 
   void addToCheckout(dynamic item) {
@@ -71,12 +74,55 @@ class OrderCheckoutController extends GetxController {
         itemPrice = int.tryParse(dealItem.dealprice) ?? 0;
         quantity = dealItem.quantity;
       }
-
-      // Update total price
       total.value -= itemPrice * quantity;
-
-      // Remove item from the list
       checkOutList.removeAt(index);
+    }
+  }
+
+  List<CheckoutModel> getCheckoutList() {
+    final box = Boxes.getCheckout();
+    return box.values.toList();
+  }
+
+  void deleteCheckout(CheckoutModel checkout) {
+    checkout.delete();
+    Get.snackbar("Deleted", "Checkout item removed successfully.");
+  }
+
+  Future<void> savedata() async {
+    try {
+      final box = Boxes.getCheckout();
+
+      for (var item in checkOutList) {
+        CheckoutModel checkout;
+
+        if (item is DealModel) {
+          checkout = CheckoutModel(
+            dateTime: DateTime.now(),
+            product: item.dealName,
+            quantity: item.quantity,
+            price: int.tryParse(item.dealprice) ?? 0,
+          );
+        } else if (item is MenuModel) {
+          checkout = CheckoutModel(
+            dateTime: DateTime.now(),
+            product: item.productName,
+            quantity: item.quantity,
+            price: int.tryParse(item.price) ?? 0,
+          );
+        } else {
+          continue;
+        }
+
+        box.add(checkout);
+        checkout.save();
+      }
+
+      Get.snackbar('Success', 'Checkout Completed');
+      Get.to(const Home());
+      checkOutList.clear();
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
     }
   }
 }

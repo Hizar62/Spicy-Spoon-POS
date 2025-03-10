@@ -21,13 +21,13 @@ class AddDealController extends GetxController {
   var selectedDealModel = Rxn<DealModel>();
   var category = <String>[].obs;
   var selectedCategory = "".obs;
+  final AddMenuController addMenuController = AddMenuController();
 
   @override
   void onInit() {
     super.onInit();
     loadProducts();
     loadCategories();
-    AddMenuController().loadDealCategories();
   }
 
   Future<void> getImage() async {
@@ -71,6 +71,7 @@ class AddDealController extends GetxController {
       selectedProduct.clear();
       dealCategory.clear();
       dealPrice.clear();
+      addMenuController.loadDealCategories();
 
       Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
     } catch (e) {

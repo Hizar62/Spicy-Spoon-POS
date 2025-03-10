@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:spicyspoon/controller/keyboard_controller.dart';
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
+import 'package:spicyspoon/dashboard/check_out_screen.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 
 import '../boxes/boxes.dart';
@@ -105,11 +106,9 @@ class _OrderState extends State<Order> {
                       valueListenable: Boxes.getDealData().listenable(),
                       builder: (context, dealBox, _) {
                         return Obx(() {
-                          // Get all MenuModel and DealModel data
                           var menuData = menuBox.values.toList().cast<MenuModel>();
                           var dealData = dealBox.values.toList().cast<DealModel>();
 
-                          // Filter menu items based on selected category
                           var filteredMenu = controller.selectedCategory.value.isEmpty
                               ? menuData
                               : menuData
@@ -118,7 +117,6 @@ class _OrderState extends State<Order> {
                                       controller.selectedCategory.value.trim().toLowerCase())
                                   .toList();
 
-                          // Filter deals based on selected category
                           var filteredDeals = controller.selectedDealCategory.value.isEmpty
                               ? dealData
                               : dealData
@@ -127,7 +125,6 @@ class _OrderState extends State<Order> {
                                       controller.selectedDealCategory.value.trim().toLowerCase())
                                   .toList();
 
-                          // Merge both filtered lists
                           var combinedList = [...filteredMenu, ...filteredDeals];
 
                           return GridView.builder(
@@ -147,13 +144,12 @@ class _OrderState extends State<Order> {
                               String category = "";
                               String extraInfo = "";
 
-                              // Check if the item is MenuModel or DealModel
                               if (item is MenuModel) {
                                 imageBytes = item.productImage;
                                 name = item.productName;
                                 price = "RS:${item.price}";
                                 category = item.productCategory;
-                                extraInfo = ""; // No extra info needed for MenuModel
+                                extraInfo = "";
                               } else if (item is DealModel) {
                                 imageBytes = item.dealImage;
                                 name = item.dealName;
@@ -176,7 +172,7 @@ class _OrderState extends State<Order> {
                                       Text(name,
                                           style: const TextStyle(fontWeight: FontWeight.bold)),
                                       Text(category, style: const TextStyle(color: Colors.grey)),
-                                      if (extraInfo.isNotEmpty) // Show extra info only for deals
+                                      if (extraInfo.isNotEmpty)
                                         Text(extraInfo, style: const TextStyle(color: Colors.grey)),
                                       Text(price, style: const TextStyle(color: Colors.green)),
                                     ],
@@ -202,7 +198,7 @@ class _OrderState extends State<Order> {
                         "Checkout Order",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16, // Adjust font size as needed
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -283,7 +279,6 @@ class _OrderState extends State<Order> {
                                       ),
                                     ),
                                   ),
-                                  // Show quantity for both Menu and Deal
                                   Positioned(
                                     top: 5.0,
                                     left: 1.0,
@@ -296,8 +291,7 @@ class _OrderState extends State<Order> {
                                         children: [
                                           const Icon(Icons.circle, color: Colors.green, size: 24),
                                           Text(
-                                            item.quantity
-                                                .toString(), // Ensure DealModel also has a quantity field
+                                            item.quantity.toString(),
                                             style: const TextStyle(
                                                 color: Colors.white, fontWeight: FontWeight.bold),
                                           ),
@@ -308,11 +302,9 @@ class _OrderState extends State<Order> {
                                 ],
                               );
                             },
-
                           ),
                         );
                       }),
-
                     ),
                   ),
                 ],
@@ -395,7 +387,9 @@ class _OrderState extends State<Order> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(const CheckOutScreen());
+                      },
                       child: const Text(
                         'Order Checkout',
                         style: TextStyle(

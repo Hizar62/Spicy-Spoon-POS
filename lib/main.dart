@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:spicyspoon/controller/order_checkout_controller.dart';
 import 'package:spicyspoon/dashboard/home.dart';
 import 'package:spicyspoon/model/checkout_model.dart';
 import 'package:spicyspoon/model/deal_model.dart';
@@ -15,6 +16,7 @@ void main() async {
   await Hive.openBox<MenuModel>('pos');
   await Hive.openBox<DealModel>('posdeal');
   await Hive.openBox<CheckoutModel>('checkout');
+  Get.put(OrderCheckoutController()); 
   runApp(const MyApp());
 }
 
