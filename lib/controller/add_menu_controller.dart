@@ -121,7 +121,6 @@ class AddMenuController extends GetxController {
     var data = box.values.toList().cast<MenuModel>();
     var uniqueCategories = data.map((item) => item.productCategory).toSet().toList();
     category.assignAll(uniqueCategories);
-    print(category);
   }
 
   void loadDealCategories() {
@@ -129,7 +128,6 @@ class AddMenuController extends GetxController {
     var data = box.values.toList().cast<DealModel>();
     var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
     dealCategory.assignAll(uniqueCategories);
-    print(dealCategory);
   }
 
   void setCategory(String category) {

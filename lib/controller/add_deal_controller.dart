@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:spicyspoon/controller/add_menu_controller.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 
 import '../boxes/boxes.dart';
@@ -26,6 +27,7 @@ class AddDealController extends GetxController {
     super.onInit();
     loadProducts();
     loadCategories();
+    AddMenuController().loadDealCategories();
   }
 
   Future<void> getImage() async {

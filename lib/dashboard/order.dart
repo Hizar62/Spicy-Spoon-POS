@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 import 'package:spicyspoon/controller/keyboard_controller.dart';
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
+import 'package:spicyspoon/model/deal_model.dart';
 
 import '../boxes/boxes.dart';
 import '../controller/add_menu_controller.dart';
@@ -97,25 +98,41 @@ class _OrderState extends State<Order> {
                 }),
               ),
               Expanded(
-                child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Expanded(
-                    child: ValueListenableBuilder<Box<MenuModel>>(
-                      valueListenable: Boxes.getData().listenable(),
-                      builder: (context, box, _) {
+                child: ValueListenableBuilder<Box<MenuModel>>(
+                  valueListenable: Boxes.getData().listenable(),
+                  builder: (context, menuBox, _) {
+                    return ValueListenableBuilder<Box<DealModel>>(
+                      valueListenable: Boxes.getDealData().listenable(),
+                      builder: (context, dealBox, _) {
                         return Obx(() {
-                          var data = box.values.toList().cast<MenuModel>();
+                          // Get all MenuModel and DealModel data
+                          var menuData = menuBox.values.toList().cast<MenuModel>();
+                          var dealData = dealBox.values.toList().cast<DealModel>();
 
-                          var filteredData = controller.selectedCategory.value.isEmpty
-                              ? data
-                              : data
+                          // Filter menu items based on selected category
+                          var filteredMenu = controller.selectedCategory.value.isEmpty
+                              ? menuData
+                              : menuData
                                   .where((item) =>
                                       item.productCategory.trim().toLowerCase() ==
                                       controller.selectedCategory.value.trim().toLowerCase())
                                   .toList();
 
+                          // Filter deals based on selected category
+                          var filteredDeals = controller.selectedDealCategory.value.isEmpty
+                              ? dealData
+                              : dealData
+                                  .where((deal) =>
+                                      deal.dealCategory.trim().toLowerCase() ==
+                                      controller.selectedDealCategory.value.trim().toLowerCase())
+                                  .toList();
+
+                          // Merge both filtered lists
+                          var combinedList = [...filteredMenu, ...filteredDeals];
+
                           return GridView.builder(
                             padding: const EdgeInsets.all(10.0),
-                            itemCount: filteredData.length,
+                            itemCount: combinedList.length,
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 5,
                               crossAxisSpacing: 5.0,
@@ -123,11 +140,30 @@ class _OrderState extends State<Order> {
                               childAspectRatio: 0.9,
                             ),
                             itemBuilder: (context, index) {
-                              Uint8List? imageBytes = filteredData[index].productImage;
+                              var item = combinedList[index];
+                              Uint8List? imageBytes;
+                              String name = "";
+                              String price = "";
+                              String category = "";
+                              String extraInfo = "";
+
+                              // Check if the item is MenuModel or DealModel
+                              if (item is MenuModel) {
+                                imageBytes = item.productImage;
+                                name = item.productName;
+                                price = "RS:${item.price}";
+                                category = item.productCategory;
+                                extraInfo = ""; // No extra info needed for MenuModel
+                              } else if (item is DealModel) {
+                                imageBytes = item.dealImage;
+                                name = item.dealName;
+                                price = "RS:${item.dealprice}";
+                                category = item.dealCategory;
+                              }
 
                               return GestureDetector(
                                 onTap: () {
-                                  orderCheckoutController.addToCheckout(filteredData[index]);
+                                  orderCheckoutController.addToCheckout(item);
                                 },
                                 child: Card(
                                   child: Column(
@@ -137,12 +173,12 @@ class _OrderState extends State<Order> {
                                           ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
                                           : const Icon(Icons.image_not_supported, size: 100),
                                       const SizedBox(height: 8),
-                                      Text(filteredData[index].productName,
+                                      Text(name,
                                           style: const TextStyle(fontWeight: FontWeight.bold)),
-                                      Text(filteredData[index].productCategory,
-                                          style: const TextStyle(color: Colors.grey)),
-                                      Text("RS:${filteredData[index].price}",
-                                          style: const TextStyle(color: Colors.green)),
+                                      Text(category, style: const TextStyle(color: Colors.grey)),
+                                      if (extraInfo.isNotEmpty) // Show extra info only for deals
+                                        Text(extraInfo, style: const TextStyle(color: Colors.grey)),
+                                      Text(price, style: const TextStyle(color: Colors.green)),
                                     ],
                                   ),
                                 ),
@@ -151,9 +187,9 @@ class _OrderState extends State<Order> {
                           );
                         });
                       },
-                    ),
-                  ),
-                ]),
+                    );
+                  },
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,76 +220,99 @@ class _OrderState extends State<Order> {
                             scrollDirection: Axis.horizontal,
                             itemCount: orderCheckoutController.checkOutList.length,
                             itemBuilder: (context, index) {
-                              final menuModel = orderCheckoutController.checkOutList[index];
-                              Uint8List? imageBytes = menuModel.productImage;
-                              return Stack(children: [
-                                Card(
-                                  margin: const EdgeInsets.all(8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      imageBytes != null
-                                          ? Image.memory(imageBytes, height: 70, fit: BoxFit.cover)
-                                          : const Icon(Icons.image_not_supported, size: 70),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        menuModel.productName,
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        menuModel.productCategory,
-                                        style: const TextStyle(color: Colors.grey),
-                                      ),
-                                      Text(
-                                        "RS:${menuModel.price}",
-                                        style: const TextStyle(color: Colors.green),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    top: 5.0,
-                                    right: 1.0,
-                                    child: IconButton(
-                                        onPressed: () {
-                                          orderCheckoutController.removeToCheckout(menuModel);
-                                        },
-                                        icon: const Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ))),
-                                Positioned(
-                                  top: 5.0,
-                                  left: 1.0,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      keyboardController
-                                          .onKeyboardTap(menuModel.quantity.toString());
-                                    },
-                                    icon: Stack(
-                                      alignment: Alignment.center,
+                              final item = orderCheckoutController.checkOutList[index];
+
+                              bool isMenu = item is MenuModel;
+                              bool isDeal = item is DealModel;
+
+                              if (!isMenu && !isDeal) {
+                                return const SizedBox();
+                              }
+
+                              Uint8List? imageBytes = isMenu
+                                  ? item.productImage
+                                  : isDeal
+                                      ? item.dealImage
+                                      : null;
+
+                              return Stack(
+                                children: [
+                                  Card(
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const Icon(
-                                          Icons.circle,
-                                          color: Colors.green,
-                                          size: 24,
+                                        imageBytes != null
+                                            ? Image.memory(imageBytes,
+                                                height: 70, fit: BoxFit.cover)
+                                            : const Icon(Icons.image_not_supported, size: 70),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          isMenu
+                                              ? item.productName
+                                              : isDeal
+                                                  ? item.dealName
+                                                  : 'Unknown',
+                                          style: const TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          menuModel.quantity.toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          isMenu
+                                              ? item.productCategory
+                                              : isDeal
+                                                  ? item.selectedProduct.join(', ')
+                                                  : 'Unknown',
+                                          style: const TextStyle(color: Colors.grey),
+                                        ),
+                                        Text(
+                                          "RS:${isMenu ? item.price : isDeal ? item.dealprice : 0}",
+                                          style: const TextStyle(color: Colors.green),
                                         ),
                                       ],
                                     ),
                                   ),
-                                )
-                              ]);
+                                  Positioned(
+                                    top: 5.0,
+                                    right: 1.0,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        orderCheckoutController.removeToCheckout(item);
+                                      },
+                                      icon: const Icon(
+                                        Icons.cancel,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  // Show quantity for both Menu and Deal
+                                  Positioned(
+                                    top: 5.0,
+                                    left: 1.0,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        keyboardController.onKeyboardTap(item.quantity.toString());
+                                      },
+                                      icon: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          const Icon(Icons.circle, color: Colors.green, size: 24),
+                                          Text(
+                                            item.quantity
+                                                .toString(), // Ensure DealModel also has a quantity field
+                                            style: const TextStyle(
+                                                color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
                             },
+
                           ),
                         );
                       }),
+
                     ),
                   ),
                 ],
