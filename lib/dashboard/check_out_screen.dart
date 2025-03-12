@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
+import 'package:spicyspoon/dashboard/invoice_printer.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 import 'package:spicyspoon/utils/utils.dart';
@@ -49,8 +50,6 @@ class CheckOutScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-
-                // Display List of Items Inside the Container
                 ...controller.checkOutList.map((item) {
                   String productName = "";
                   String price = "";
@@ -106,6 +105,7 @@ class CheckOutScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           controller.savedata();
+                          InvoicePrinter().printInvoice();
                         },
                         child: const Text(
                           'Order Checkout',

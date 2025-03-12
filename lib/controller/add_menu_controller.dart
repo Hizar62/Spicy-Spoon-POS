@@ -128,7 +128,6 @@ class AddMenuController extends GetxController {
     var data = box.values.toList().cast<DealModel>();
     var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
     dealCategory.assignAll(uniqueCategories);
-    refresh();
   }
 
   void setCategory(String category) {

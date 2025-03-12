@@ -40,7 +40,7 @@ class AddMenu extends StatelessWidget {
                           },
                           child: Text(
                             controller.category[index],
-                            style: const TextStyle(color: Colors.black), // Ensure text is visible
+                            style: const TextStyle(color: Colors.black), 
                           ),
                         ),
                       );
@@ -108,7 +108,7 @@ class AddMenu extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              // Prevents overflow
+              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

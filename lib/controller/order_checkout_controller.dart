@@ -9,10 +9,10 @@ import '../model/checkout_model.dart';
 class OrderCheckoutController extends GetxController {
   var checkOutList = <dynamic>[].obs;
   var total = 0.obs;
+  String name = '';
 
   void addToCheckout(dynamic item) {
     int itemPrice = 0;
-    String name = '';
 
     if (item is MenuModel) {
       itemPrice = int.tryParse(item.price) ?? 0;

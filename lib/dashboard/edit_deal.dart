@@ -27,13 +27,13 @@ class EditDeal extends StatelessWidget {
             valueListenable: Boxes.getDealData().listenable(),
             builder: (context, box, _) {
               var data = box.values.toList().cast<DealModel>();
-              // var filteredData = controller.selectedCategory.value.isEmpty
-              //     ? data
-              //     : data
-              //         .where((item) =>
-              //             item.productCategory.trim().toLowerCase() ==
-              //             addMenuController.selectedCategory.value.trim().toLowerCase())
-              //         .toList();
+              
+              
+              
+              
+              
+              
+              
 
               return GridView.builder(
                 padding: const EdgeInsets.all(10.0),
@@ -51,6 +51,7 @@ class EditDeal extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        
                         // ignore: unnecessary_null_comparison
                         imageBytes != null
                             ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)

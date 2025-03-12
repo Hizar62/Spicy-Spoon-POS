@@ -25,7 +25,7 @@ class AddDeal extends StatelessWidget {
           child: ValueListenableBuilder<Box<DealModel>>(
             valueListenable: Boxes.getDealData().listenable(),
             builder: (context, box, _) {
-              var data = box.values.toList().cast<DealModel>(); // Get data directly
+              var data = box.values.toList().cast<DealModel>(); 
 
               return GridView.builder(
                 padding: const EdgeInsets.all(10.0),
@@ -70,7 +70,7 @@ class AddDeal extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              // Prevents overflow
+              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

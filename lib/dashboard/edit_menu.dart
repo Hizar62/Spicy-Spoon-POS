@@ -39,7 +39,7 @@ class EditMenu extends StatelessWidget {
                       },
                       child: Text(
                         controller.category[index],
-                        style: const TextStyle(color: Colors.black), // Ensure text is visible
+                        style: const TextStyle(color: Colors.black), 
                       ),
                     ),
                   );
@@ -77,6 +77,7 @@ class EditMenu extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            
                             
                             // ignore: unnecessary_null_comparison
                             imageBytes != null

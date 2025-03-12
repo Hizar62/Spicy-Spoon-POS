@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 import '../controller/order_checkout_controller.dart';
 import '../model/checkout_model.dart';
 
@@ -9,13 +9,12 @@ class SalesRecord extends StatelessWidget {
 
   final OrderCheckoutController controller = Get.find<OrderCheckoutController>();
   final TextEditingController searchController = TextEditingController();
-  final RxString searchQuery = ''.obs; // Reactive search query
+  final RxString searchQuery = ''.obs;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Search Field
         Padding(
           padding: const EdgeInsets.all(10),
           child: TextField(
@@ -30,8 +29,6 @@ class SalesRecord extends StatelessWidget {
             ),
           ),
         ),
-
-        // FutureBuilder with Obx for search functionality
         Expanded(
           child: FutureBuilder(
             future: Future.value(controller.getCheckoutList()),
@@ -42,7 +39,6 @@ class SalesRecord extends StatelessWidget {
 
               final checkoutList = snapshot.data!;
 
-              // Group items by date
               Map<String, List<CheckoutModel>> groupedByDate = {};
               for (var item in checkoutList) {
                 String formattedDate = DateFormat('dd-MM-yyyy').format(item.dateTime);
@@ -56,12 +52,11 @@ class SalesRecord extends StatelessWidget {
                     String date = entry.key;
                     List<CheckoutModel> items = entry.value;
 
-                    // Filter items based on search query
                     List<CheckoutModel> filteredItems = items.where((item) {
                       return item.product.toLowerCase().contains(searchQuery.value);
                     }).toList();
 
-                    if (filteredItems.isEmpty) return const SizedBox(); // Hide empty dates
+                    if (filteredItems.isEmpty) return const SizedBox();
 
                     double dateTotal =
                         filteredItems.fold(0.0, (sum, item) => sum + (item.price * item.quantity));

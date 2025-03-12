@@ -71,7 +71,6 @@ class AddDealController extends GetxController {
       selectedProduct.clear();
       dealCategory.clear();
       dealPrice.clear();
-      addMenuController.loadDealCategories();
 
       Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
     } catch (e) {

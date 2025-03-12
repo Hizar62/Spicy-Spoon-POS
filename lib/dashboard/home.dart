@@ -70,12 +70,12 @@ class _HomeState extends State<Home> {
             if (MediaQuery.of(context).size.width >= 640)
               Obx(() {
                 return NavigationRail(
-                  groupAlignment: -1.0, // Adjust alignment for spacing
+                  groupAlignment: -1.0, 
                   destinations: const [
                     NavigationRailDestination(
                       icon: Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 12.0), // Add spacing
+                            EdgeInsets.symmetric(vertical: 12.0), 
                         child: Icon(Icons.home),
                       ),
                       label: Text('Home'),
@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
                         radius: 20,
                         child: Icon(Icons.person),
                       ),
-                      SizedBox(height: 20), // Space below the profile
+                      SizedBox(height: 20), 
                     ],
                   ),
                   selectedIndex: homeController.selectedIndex.value,
