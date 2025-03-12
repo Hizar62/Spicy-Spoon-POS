@@ -18,12 +18,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _screen = const [
-    Order(),
-    AddMenu(),
-    EditMenu(),
-    AddDeal(),
-    EditDeal(),
+  final List<Widget> _screen = [
+    const Order(),
+    const AddMenu(),
+    const EditMenu(),
+    const AddDeal(),
+    const EditDeal(),
     SalesRecord()
   ];
 
@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
                   ],
                   labelType: NavigationRailLabelType.all,
                   selectedLabelTextStyle: const TextStyle(color: Colors.black),
-                  unselectedLabelTextStyle: const TextStyle(),
+                  unselectedLabelTextStyle: const TextStyle(color: Colors.black),
                   leading: const Column(
                     children: [
                       SizedBox(height: 8),

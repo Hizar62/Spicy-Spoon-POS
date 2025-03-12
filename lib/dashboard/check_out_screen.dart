@@ -87,7 +87,7 @@ class CheckOutScreen extends StatelessWidget {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
                 const SizedBox(height: 10),
                 Center(
                   child: Text(
