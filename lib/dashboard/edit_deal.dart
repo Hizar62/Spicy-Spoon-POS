@@ -76,7 +76,7 @@ class EditDeal extends StatelessWidget {
                                     data[index],
                                     imageBytes,
                                     data[index].dealName,
-                                    data[index].selectedProduct as List<String>,
+                                    data[index].selectedProduct.cast<String>(),
                                     data[index].dealCategory,
                                     data[index].dealprice);
                               },

@@ -66,6 +66,10 @@ class AddDealController extends GetxController {
       box.add(data);
       data.save();
 
+      if (!category.contains(data.dealCategory)) {
+        category.add(data.dealCategory);
+      }
+
       imageBytes.value = null;
       dealName.clear();
       selectedProduct.clear();
@@ -83,7 +87,8 @@ class AddDealController extends GetxController {
 
   void delete(DealModel dealModel) async {
     await dealModel.delete();
-    loadCategories();
+    addMenuController.loadDealCategories();
+    update();
   }
 
   void fetchIntoFields(DealModel dealModel, Uint8List image, String name, List selectedItems,
@@ -128,6 +133,7 @@ class AddDealController extends GetxController {
 
     var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
     category.assignAll(uniqueCategories);
+    update();
   }
 
   void loadProducts() {
@@ -139,6 +145,7 @@ class AddDealController extends GetxController {
     selectProduct.assignAll(
       uniqueProducts.map((product) => MultiSelectItem(product, product)).toList(),
     );
+    update();
   }
 
   void setCategory(String category) {
