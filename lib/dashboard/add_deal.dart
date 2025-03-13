@@ -20,8 +20,11 @@ class _AddDealState extends State<AddDeal> {
   void initState() {
     super.initState();
     final AddDealController controller = Get.put(AddDealController());
-    controller.loadProducts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadProducts();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -36,7 +39,7 @@ class _AddDealState extends State<AddDeal> {
           child: ValueListenableBuilder<Box<DealModel>>(
             valueListenable: Boxes.getDealData().listenable(),
             builder: (context, box, _) {
-              var data = box.values.toList().cast<DealModel>(); 
+              var data = box.values.toList().cast<DealModel>();
 
               return GridView.builder(
                 padding: const EdgeInsets.all(10.0),
@@ -73,7 +76,6 @@ class _AddDealState extends State<AddDeal> {
             },
           ),
         ),
-
         Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
           width: screenWidth * 0.25,
@@ -81,7 +83,6 @@ class _AddDealState extends State<AddDeal> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -224,7 +225,10 @@ class _AddDealState extends State<AddDeal> {
                                 )
                               : Text(
                                   'Save',
-                                  style: TextStyle(color: utils.backGroundColor, fontWeight: FontWeight.bold, fontSize: 18),
+                                  style: TextStyle(
+                                      color: utils.backGroundColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 );
                         })),
                   )

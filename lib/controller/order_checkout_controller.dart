@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:spicyspoon/controller/keyboard_controller.dart';
 import 'package:spicyspoon/dashboard/home.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 import 'package:spicyspoon/model/menu_model.dart';
@@ -10,7 +11,7 @@ class OrderCheckoutController extends GetxController {
   var checkOutList = <dynamic>[].obs;
   var total = 0.obs;
   String name = '';
-
+  final KeyboardController keyboardController = Get.put(KeyboardController());
   void addToCheckout(dynamic item) {
     int itemPrice = 0;
 
@@ -76,6 +77,22 @@ class OrderCheckoutController extends GetxController {
       }
       total.value -= itemPrice * quantity;
       checkOutList.removeAt(index);
+
+      final KeyboardController keyboardController = Get.find();
+      if (keyboardController.selectedItemIndex.value == index) {
+        keyboardController.clear();
+      }
+    }
+  }
+
+  void calculateTotal() {
+    total.value = 0;
+    for (var item in checkOutList) {
+      if (item is MenuModel) {
+        total.value += (int.tryParse(item.price) ?? 0) * item.quantity;
+      } else if (item is DealModel) {
+        total.value += (int.tryParse(item.dealprice) ?? 0) * item.quantity;
+      }
     }
   }
 
@@ -121,6 +138,8 @@ class OrderCheckoutController extends GetxController {
       Get.snackbar('Success', 'Checkout Completed');
       Get.to(const Home());
       checkOutList.clear();
+      keyboardController.clear();
+      total.value = 0;
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }

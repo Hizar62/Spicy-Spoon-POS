@@ -39,7 +39,7 @@ class EditMenu extends StatelessWidget {
                       },
                       child: Text(
                         controller.category[index],
-                        style: const TextStyle(color: Colors.black), 
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                   );
@@ -77,8 +77,6 @@ class EditMenu extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            
-                            
                             // ignore: unnecessary_null_comparison
                             imageBytes != null
                                 ? Image.memory(imageBytes, height: 100, fit: BoxFit.cover)
@@ -111,12 +109,36 @@ class EditMenu extends StatelessWidget {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    controller.delete(data[index]);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text("Confirmation"),
+                                          content: const Text(
+                                              "Are you sure you want to delete this item?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                controller.delete(data[index]);
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Delete"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                   icon: const Icon(Icons.delete),
                                   color: Colors.red,
                                   tooltip: "Delete Item",
-                                ),
+                                )
                               ],
                             )
                           ],

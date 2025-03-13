@@ -169,6 +169,9 @@ class _OrderState extends State<Order> {
                               return GestureDetector(
                                 onTap: () {
                                   orderCheckoutController.addToCheckout(item);
+                                  keyboardController.selectedItemIndex.value =
+                                      orderCheckoutController.checkOutList.indexOf(item);
+                                  keyboardController.text.value = item.quantity.toString();
                                 },
                                 child: Card(
                                   child: Column(
@@ -323,8 +326,8 @@ class _OrderState extends State<Order> {
         ),
         Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          width: screenWidth * 0.25,
-          height: screenHeight,
+          width: MediaQuery.of(context).size.width * 0.25,
+          height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -337,7 +340,7 @@ class _OrderState extends State<Order> {
                 ),
                 Obx(() {
                   return Container(
-                    width: screenWidth,
+                    width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 2),
@@ -362,6 +365,7 @@ class _OrderState extends State<Order> {
                       if (keyboardController.text.value.isNotEmpty) {
                         keyboardController.text.value = keyboardController.text.value
                             .substring(0, keyboardController.text.value.length - 1);
+                        keyboardController.updateQuantity();
                       }
                     },
                     rightIcon: const Icon(
@@ -412,4 +416,8 @@ class _OrderState extends State<Order> {
       ],
     );
   }
+}
+
+extension on HiveObject {
+  get quantity => 1;
 }

@@ -86,12 +86,38 @@ class EditDeal extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                controller.delete(data[index]);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Confirmation"),
+                                      content:
+                                          const Text("Are you sure you want to delete this item?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                          },
+                                          child: const Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            controller.delete(data[index]);
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog after deleting
+                                          },
+                                          child: const Text("Delete"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
                               },
                               icon: const Icon(Icons.delete),
                               color: Colors.red,
                               tooltip: "Delete Item",
-                            ),
+                            )
                           ],
                         )
                       ],

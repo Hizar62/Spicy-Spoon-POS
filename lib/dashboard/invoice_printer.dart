@@ -1,7 +1,8 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_usb_printer/flutter_usb_printer.dart';
-import 'dart:typed_data';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 import 'package:spicyspoon/model/deal_model.dart';
@@ -15,7 +16,6 @@ class InvoicePrinter {
 
       List<Map<String, dynamic>> devices = await FlutterUsbPrinter.getUSBDeviceList();
       if (devices.isEmpty) {
-        print("No USB printer found!");
         return;
       }
 
@@ -25,7 +25,6 @@ class InvoicePrinter {
 
       bool? isConnected = await printer.connect(vendorId, productId);
       if (isConnected != true) {
-        print("Failed to connect to printer.");
         return;
       }
 
@@ -34,8 +33,14 @@ class InvoicePrinter {
 
       List<int> bytes = [];
 
-      bytes += generator.text('Spicy Spoon',
-          styles: const PosStyles(align: PosAlign.center, bold: true, height: PosTextSize.size2));
+      final ByteData data = await rootBundle.load('assets/Spicy_spoon.png');
+      final Uint8List imgBytes = data.buffer.asUint8List();
+      final image = img.decodeImage(imgBytes);
+
+      if (image != null) {
+        bytes += generator.imageRaster(image);
+      }
+
       bytes +=
           generator.text('Phone: +1234567890', styles: const PosStyles(align: PosAlign.center));
       bytes += generator.hr();
@@ -79,9 +84,8 @@ class InvoicePrinter {
       bytes += generator.cut();
 
       await printer.write(Uint8List.fromList(bytes));
-      print("Invoice Printed Successfully!");
     } catch (e) {
-      print("Error printing invoice: $e");
+      Get.snackbar('Error', e.toString());
     }
   }
 }
