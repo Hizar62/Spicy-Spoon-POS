@@ -21,6 +21,15 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
+
+  @override
+  void initState() {
+    super.initState();
+    final AddMenuController controller = Get.put(AddMenuController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadDealCategories();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;

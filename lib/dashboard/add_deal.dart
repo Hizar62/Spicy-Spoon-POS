@@ -8,9 +8,20 @@ import '../boxes/boxes.dart';
 import '../controller/add_deal_controller.dart';
 import '../utils/utils.dart';
 
-class AddDeal extends StatelessWidget {
+class AddDeal extends StatefulWidget {
   const AddDeal({super.key});
 
+  @override
+  State<AddDeal> createState() => _AddDealState();
+}
+
+class _AddDealState extends State<AddDeal> {
+  @override
+  void initState() {
+    super.initState();
+    final AddDealController controller = Get.put(AddDealController());
+    controller.loadProducts();
+  }
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;

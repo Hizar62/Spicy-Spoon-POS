@@ -19,7 +19,7 @@ class AddDealController extends GetxController {
   var selectedProduct = <String>[].obs;
   RxBool isLoading = false.obs;
   var selectedDealModel = Rxn<DealModel>();
-  var category = <String>[].obs;
+  var dealcategory = <String>[].obs;
   var selectedCategory = "".obs;
   final AddMenuController addMenuController = AddMenuController();
 
@@ -65,9 +65,9 @@ class AddDealController extends GetxController {
       final box = Boxes.getDealData();
       box.add(data);
       data.save();
-
-      if (!category.contains(data.dealCategory)) {
-        category.add(data.dealCategory);
+      addMenuController.loadDealCategories();
+      if (!dealcategory.contains(data.dealCategory)) {
+        dealcategory.add(data.dealCategory);
       }
 
       imageBytes.value = null;
@@ -77,6 +77,7 @@ class AddDealController extends GetxController {
       dealPrice.clear();
 
       Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
+      update(); 
     } catch (e) {
       Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.redAccent, colorText: Colors.white);
@@ -132,7 +133,7 @@ class AddDealController extends GetxController {
     var data = box.values.toList().cast<DealModel>();
 
     var uniqueCategories = data.map((item) => item.dealCategory).toSet().toList();
-    category.assignAll(uniqueCategories);
+    dealcategory.assignAll(uniqueCategories);
     update();
   }
 
