@@ -42,13 +42,15 @@ dependencies:
   hive_flutter: ^1.1.0
   path_provider: ^2.1.5
   multi_select_flutter: ^4.1.3
-  intl: ^0.20.2
-  flutter_usb_printer: ^0.1.0+1
-  esc_pos_utils: ^1.1.0
-  esc_pos_printer: ^4.1.0
-  image: ^3.3.0
+  intl: ^0.17.0
+  esc_pos_utils: ^1.1.0 
+  flutter_usb_printer: 
+  image: ^3.0.2 
+  pdf: ^3.10.0 
+  syncfusion_flutter_pdfviewer: ^20.4.54
 
-  
+dependency_overrides:
+  image: ^4.1.0 
 
 dev_dependencies:
   hive_generator: ^2.0.1

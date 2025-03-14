@@ -104,6 +104,25 @@ class CheckOutScreen extends StatelessWidget {
                           backgroundColor: Colors.green,
                         ),
                         onPressed: () {
+                          InvoicePrinter().printInvoice();
+                        },
+                        child: const Text(
+                          'Print',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                        )),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Center(
+                  child: SizedBox(
+                    width: screenWidth * 0.85,
+                    height: screenHeight * 0.09,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () {
                           controller.savedata();
                           InvoicePrinter().printInvoice();
                         },
