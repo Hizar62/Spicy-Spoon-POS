@@ -6,7 +6,7 @@ import '../model/menu_model.dart';
 
 class KeyboardController extends GetxController {
   var text = ''.obs;
-  var selectedItemIndex = (-1).obs; 
+  var selectedItemIndex = (-1).obs; // Track the selected item index
 
   void onKeyboardTap(String value) {
     text.value = text.value + value;
@@ -29,7 +29,6 @@ class KeyboardController extends GetxController {
       orderCheckoutController.checkOutList.refresh();
     }
   }
-  
 
   void clear() {
     text.value = '';

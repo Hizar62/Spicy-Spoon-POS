@@ -124,7 +124,7 @@ class CheckOutScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           controller.savedata();
-                          InvoicePrinter().printInvoice();
+                          // InvoicePrinter().printInvoice();
                         },
                         child: const Text(
                           'Order Checkout',

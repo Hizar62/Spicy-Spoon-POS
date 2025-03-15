@@ -55,7 +55,7 @@ class InvoicePrinter {
                     ],
                   ),
                 pw.Divider(),
-                pw.Text('Total: \$${controller.total}',
+                pw.Text('Total: RS: ${controller.total}',
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16)),
               ],

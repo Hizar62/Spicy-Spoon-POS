@@ -168,10 +168,21 @@ class _OrderState extends State<Order> {
 
                               return GestureDetector(
                                 onTap: () {
+                                  if (item is MenuModel) {
+                                    final menuItem = item;
+                                    keyboardController.text.value = menuItem.quantity.toString();
+                                  } else if (item is DealModel) {
+                                    final dealItem = item;
+                                    keyboardController.text.value = dealItem.quantity.toString();
+                                  } else {
+                                    // Handle unexpected types
+                                    print("Unexpected item type: ${item.runtimeType}");
+                                    keyboardController.text.value = '1'; // Default quantity
+                                  }
+
                                   orderCheckoutController.addToCheckout(item);
                                   keyboardController.selectedItemIndex.value =
                                       orderCheckoutController.checkOutList.indexOf(item);
-                                  keyboardController.text.value = item.quantity.toString();
                                 },
                                 child: Card(
                                   child: Column(
@@ -237,11 +248,27 @@ class _OrderState extends State<Order> {
                                 return const SizedBox();
                               }
 
-                              Uint8List? imageBytes = isMenu
-                                  ? item.productImage
-                                  : isDeal
-                                      ? item.dealImage
-                                      : null;
+                              Uint8List? imageBytes;
+                              String name = "";
+                              String price = "";
+                              String category = "";
+                              int quantity = 1;
+
+                              if (isMenu) {
+                                final menuItem = item;
+                                imageBytes = menuItem.productImage;
+                                name = menuItem.productName;
+                                price = "RS:${menuItem.price}";
+                                category = menuItem.productCategory;
+                                quantity = menuItem.quantity;
+                              } else if (isDeal) {
+                                final dealItem = item;
+                                imageBytes = dealItem.dealImage;
+                                name = dealItem.dealName;
+                                price = "RS:${dealItem.dealprice}";
+                                category = dealItem.dealCategory;
+                                quantity = dealItem.quantity;
+                              }
 
                               return Stack(
                                 children: [
@@ -256,25 +283,18 @@ class _OrderState extends State<Order> {
                                             : const Icon(Icons.image_not_supported, size: 70),
                                         const SizedBox(height: 2),
                                         Text(
-                                          isMenu
-                                              ? item.productName
-                                              : isDeal
-                                                  ? item.dealName
-                                                  : 'Unknown',
+                                          name,
                                           style: const TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          isMenu
-                                              ? item.productCategory
-                                              : isDeal
-                                                  ? item.selectedProduct.join(', ')
-                                                  : 'Unknown',
+                                          category,
                                           style: const TextStyle(color: Colors.grey),
                                         ),
                                         Text(
-                                          "RS:${isMenu ? item.price : isDeal ? item.dealprice : 0}",
+                                          price,
                                           style: const TextStyle(color: Colors.green),
                                         ),
+                                        
                                       ],
                                     ),
                                   ),
@@ -296,14 +316,15 @@ class _OrderState extends State<Order> {
                                     left: 1.0,
                                     child: IconButton(
                                       onPressed: () {
-                                        keyboardController.onKeyboardTap(item.quantity.toString());
+                                        keyboardController.selectedItemIndex.value = index;
+                                        keyboardController.text.value = quantity.toString();
                                       },
                                       icon: Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           const Icon(Icons.circle, color: Colors.green, size: 24),
                                           Text(
-                                            item.quantity.toString(),
+                                            quantity.toString(),
                                             style: const TextStyle(
                                                 color: Colors.white, fontWeight: FontWeight.bold),
                                           ),
@@ -418,6 +439,4 @@ class _OrderState extends State<Order> {
   }
 }
 
-extension on HiveObject {
-  get quantity => 1;
-}
+
