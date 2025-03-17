@@ -51,6 +51,7 @@ dependencies:
   printing: ^5.14.2
   usb_esc_printer_windows: ^0.0.3
   esc_pos_utils_plus: ^2.0.4
+  open_file: ^3.5.10
 
 dependency_overrides:
   image: ^4.1.0 

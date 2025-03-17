@@ -1,8 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
-import 'package:spicyspoon/dashboard/pdf_preview_screen.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -11,7 +12,6 @@ class InvoicePrinter {
 
   Future<void> printInvoice() async {
     try {
-      // Generate PDF
       final pdf = pw.Document();
 
       final ByteData data = await rootBundle.load('assets/Spicy_spoon.png');
@@ -20,22 +20,37 @@ class InvoicePrinter {
 
       pdf.addPage(
         pw.Page(
+          pageFormat: PdfPageFormat.roll80,
+          margin: const pw.EdgeInsets.all(4),
           build: (pw.Context context) {
             return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 if (image != null)
-                  pw.Image(
-                    pw.MemoryImage(Uint8List.fromList(img.encodePng(image))),
-                    width: 200,
-                    height: 100,
+                  pw.Center(
+                    child: pw.Image(
+                      pw.MemoryImage(Uint8List.fromList(img.encodePng(image))),
+                      width: 150,
+                      height: 60,
+                    ),
                   ),
-                pw.Text('Phone: 03272826000', textAlign: pw.TextAlign.center),
+                pw.SizedBox(height: 5),
+                pw.Center(
+                  child: pw.Text('Phone: 03272826000', style: const pw.TextStyle(fontSize: 10)),
+                ),
                 pw.Divider(),
                 pw.Row(
                   children: [
-                    pw.Expanded(flex: 6, child: pw.Text('Item')),
-                    pw.Expanded(flex: 3, child: pw.Text('Qty', textAlign: pw.TextAlign.right)),
-                    pw.Expanded(flex: 3, child: pw.Text('Price', textAlign: pw.TextAlign.right)),
+                    pw.Expanded(
+                        flex: 5, child: pw.Text('Item', style: const pw.TextStyle(fontSize: 9))),
+                    pw.Expanded(
+                        flex: 2,
+                        child: pw.Text('Qty',
+                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 9))),
+                    pw.Expanded(
+                        flex: 3,
+                        child: pw.Text('Price',
+                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 9))),
                   ],
                 ),
                 pw.Divider(),
@@ -43,32 +58,51 @@ class InvoicePrinter {
                   pw.Row(
                     children: [
                       pw.Expanded(
-                          flex: 6,
-                          child: pw.Text(item is MenuModel ? item.productName : item.dealName)),
+                        flex: 5,
+                        child: pw.Text(item is MenuModel ? item.productName : item.dealName,
+                            style: const pw.TextStyle(fontSize: 8)),
+                      ),
                       pw.Expanded(
-                          flex: 3,
-                          child: pw.Text(item.quantity.toString(), textAlign: pw.TextAlign.right)),
+                        flex: 2,
+                        child: pw.Text(item.quantity.toString(),
+                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 8)),
+                      ),
                       pw.Expanded(
-                          flex: 3,
-                          child: pw.Text(item is MenuModel ? item.price : item.dealprice,
-                              textAlign: pw.TextAlign.right)),
+                        flex: 3,
+                        child: pw.Text((item is MenuModel ? item.price : item.dealprice).toString(),
+                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 8)),
+                      ),
                     ],
                   ),
                 pw.Divider(),
-                pw.Text('Total: RS: ${controller.total}',
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16)),
+                pw.Row(
+                  children: [
+                    pw.Expanded(
+                        flex: 5,
+                        child: pw.Text('Total:',
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10))),
+                    pw.Expanded(
+                        flex: 5,
+                        child: pw.Text('RS: ${controller.total}',
+                            textAlign: pw.TextAlign.right,
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10))),
+                  ],
+                ),
+                pw.SizedBox(height: 10),
+                pw.Center(
+                  child:
+                      pw.Text('Thank you for your visit!', style: const pw.TextStyle(fontSize: 10)),
+                ),
               ],
             );
           },
         ),
       );
 
-      // Save the PDF to a byte array
       final Uint8List pdfBytes = await pdf.save();
-
-      // Navigate to the PDF preview screen
-      Get.to(() => PdfPreviewScreen(pdfBytes: pdfBytes));
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdfBytes,
+      );
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
