@@ -6,9 +6,16 @@ import '../model/menu_model.dart';
 
 class KeyboardController extends GetxController {
   var text = ''.obs;
-  var selectedItemIndex = (-1).obs; 
+  var selectedItemIndex = (-1).obs;
+  var shouldOverwrite = true.obs; 
+
   void onKeyboardTap(String value) {
-    text.value = text.value + value;
+    if (shouldOverwrite.value) {
+      text.value = value;
+      shouldOverwrite.value = false;
+    } else {
+      text.value += value;
+    }
     updateQuantity();
   }
 
@@ -29,8 +36,17 @@ class KeyboardController extends GetxController {
     }
   }
 
+  void selectProduct(int index, int quantity) {
+    if (selectedItemIndex.value != index) {
+      selectedItemIndex.value = index;
+      text.value = quantity.toString(); // Set quantity from product
+      shouldOverwrite.value = true; // Ensure overwrite mode resets on new selection
+    }
+  }
+
   void clear() {
     text.value = '';
     selectedItemIndex.value = -1;
+    shouldOverwrite.value = true; // Reset overwrite mode
   }
 }

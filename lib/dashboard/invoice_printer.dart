@@ -20,8 +20,8 @@ class InvoicePrinter {
 
       pdf.addPage(
         pw.Page(
-          pageFormat: PdfPageFormat.roll80,
-          margin: const pw.EdgeInsets.all(4),
+          pageFormat: const PdfPageFormat(80 * PdfPageFormat.mm, double.infinity),
+          margin: pw.EdgeInsets.zero,
           build: (pw.Context context) {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -30,50 +30,75 @@ class InvoicePrinter {
                   pw.Center(
                     child: pw.Image(
                       pw.MemoryImage(Uint8List.fromList(img.encodePng(image))),
-                      width: 150,
-                      height: 60,
+                      width: 170,
+                      height: 80,
                     ),
                   ),
-                pw.SizedBox(height: 5),
+                pw.SizedBox(height: 10),
                 pw.Center(
-                  child: pw.Text('Phone: 03272826000', style: const pw.TextStyle(fontSize: 10)),
+                  child: pw.Text(
+                    'Bhagowal Road Ada Gopalpur Sialkot',
+                    style: const pw.TextStyle(fontSize: 10),
+                    softWrap: true,
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Center(
+                  child: pw.Text(
+                    'Phone: 03272826000',
+                    style: const pw.TextStyle(fontSize: 10),
+                    softWrap: true,
+                  ),
                 ),
                 pw.Divider(),
                 pw.Row(
                   children: [
                     pw.Expanded(
-                        flex: 5, child: pw.Text('Item', style: const pw.TextStyle(fontSize: 9))),
-                    pw.Expanded(
-                        flex: 2,
-                        child: pw.Text('Qty',
-                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 9))),
+                        flex: 5,
+                        child: pw.Text('Item',
+                            style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
                     pw.Expanded(
                         flex: 3,
                         child: pw.Text('Price',
-                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 9))),
+                            textAlign: pw.TextAlign.right,
+                            style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
                   ],
                 ),
                 pw.Divider(),
-                for (var item in controller.checkOutList)
+                for (var item in controller.checkOutList) ...[
                   pw.Row(
                     children: [
                       pw.Expanded(
                         flex: 5,
-                        child: pw.Text(item is MenuModel ? item.productName : item.dealName,
-                            style: const pw.TextStyle(fontSize: 8)),
+                        child: pw.Text(
+                          item is MenuModel ? item.productName : item.dealName,
+                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                        ),
                       ),
+                      pw.Expanded(flex: 3, child: pw.SizedBox()),
+                    ],
+                  ),
+                  pw.Row(
+                    children: [
                       pw.Expanded(
-                        flex: 2,
-                        child: pw.Text(item.quantity.toString(),
-                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 8)),
+                        flex: 5,
+                        child: pw.Text(
+                          '${item.quantity} × ${(item is MenuModel) ? item.price : item.dealprice}',
+                          style: const pw.TextStyle(fontSize: 7, color: PdfColors.grey),
+                        ),
                       ),
                       pw.Expanded(
                         flex: 3,
-                        child: pw.Text((item is MenuModel ? item.price : item.dealprice).toString(),
-                            textAlign: pw.TextAlign.right, style: const pw.TextStyle(fontSize: 8)),
+                        child: pw.Text(
+                          '${item.quantity * ((item is MenuModel) ? item.price : item.dealprice)}',
+                          textAlign: pw.TextAlign.right,
+                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
+                  pw.SizedBox(height: 5),
+                ],
                 pw.Divider(),
                 pw.Row(
                   children: [

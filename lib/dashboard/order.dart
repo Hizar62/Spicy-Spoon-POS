@@ -175,9 +175,7 @@ class _OrderState extends State<Order> {
                                     final dealItem = item;
                                     keyboardController.text.value = dealItem.quantity.toString();
                                   } else {
-                                    // Handle unexpected types
-                                    print("Unexpected item type: ${item.runtimeType}");
-                                    keyboardController.text.value = '1'; // Default quantity
+                                    keyboardController.text.value = '1'; 
                                   }
 
                                   orderCheckoutController.addToCheckout(item);
@@ -318,6 +316,8 @@ class _OrderState extends State<Order> {
                                       onPressed: () {
                                         keyboardController.selectedItemIndex.value = index;
                                         keyboardController.text.value = quantity.toString();
+                                        keyboardController.shouldOverwrite.value =
+                                            true; // Ensure next input overwrites
                                       },
                                       icon: Stack(
                                         alignment: Alignment.center,
@@ -326,12 +326,15 @@ class _OrderState extends State<Order> {
                                           Text(
                                             quantity.toString(),
                                             style: const TextStyle(
-                                                color: Colors.white, fontWeight: FontWeight.bold),
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
+
                                 ],
                               );
                             },
