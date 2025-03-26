@@ -20,7 +20,7 @@ class MenuModelAdapter extends TypeAdapter<MenuModel> {
       productImage: fields[0] as Uint8List?,
       productName: fields[1] as String,
       productCategory: fields[2] as String,
-      price: fields[3] as String,
+      price: fields[3] as double,
       quantity: fields[4] as int,
     );
   }

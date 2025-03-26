@@ -9,17 +9,17 @@ import '../model/checkout_model.dart';
 
 class OrderCheckoutController extends GetxController {
   var checkOutList = <dynamic>[].obs;
-  var total = 0.obs;
+  var total = 0.0.obs;
   String name = '';
   final KeyboardController keyboardController = Get.put(KeyboardController());
   void addToCheckout(dynamic item) {
-    int itemPrice = 0;
+    double itemPrice = 0.0;
 
     if (item is MenuModel) {
-      itemPrice = int.tryParse(item.price) ?? 0;
+      itemPrice = item.price;
       name = item.productName;
     } else if (item is DealModel) {
-      itemPrice = int.tryParse(item.dealprice) ?? 0;
+      itemPrice = item.dealprice;
       name = item.dealName;
     }
 
@@ -63,16 +63,16 @@ class OrderCheckoutController extends GetxController {
     });
 
     if (index != -1) {
-      int itemPrice = 0;
+      double itemPrice = 0;
       int quantity = 1;
 
       if (checkOutList[index] is MenuModel) {
         MenuModel menuItem = checkOutList[index] as MenuModel;
-        itemPrice = int.tryParse(menuItem.price) ?? 0;
+        itemPrice = menuItem.price;
         quantity = menuItem.quantity;
       } else if (checkOutList[index] is DealModel) {
         DealModel dealItem = checkOutList[index] as DealModel;
-        itemPrice = int.tryParse(dealItem.dealprice) ?? 0;
+        itemPrice = dealItem.dealprice;
         quantity = dealItem.quantity;
       }
       total.value -= itemPrice * quantity;
@@ -86,12 +86,12 @@ class OrderCheckoutController extends GetxController {
   }
 
   void calculateTotal() {
-    total.value = 0;
+    total.value = 0.0;
     for (var item in checkOutList) {
       if (item is MenuModel) {
-        total.value += (int.tryParse(item.price) ?? 0) * item.quantity;
+        total.value += item.price * item.quantity;
       } else if (item is DealModel) {
-        total.value += (int.tryParse(item.dealprice) ?? 0) * item.quantity;
+        total.value += item.dealprice * item.quantity;
       }
     }
   }
@@ -118,14 +118,14 @@ class OrderCheckoutController extends GetxController {
             dateTime: DateTime.now(),
             product: item.dealName,
             quantity: item.quantity,
-            price: int.tryParse(item.dealprice) ?? 0,
+            price: item.dealprice,
           );
         } else if (item is MenuModel) {
           checkout = CheckoutModel(
             dateTime: DateTime.now(),
             product: item.productName,
             quantity: item.quantity,
-            price: int.tryParse(item.price) ?? 0,
+            price: item.price,
           );
         } else {
           continue;

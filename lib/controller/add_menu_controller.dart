@@ -53,7 +53,7 @@ class AddMenuController extends GetxController {
         productImage: imageBytes.value!,
         productName: productName.text,
         productCategory: productCategory.text,
-        price: productPrice.text,
+        price: double.tryParse(productPrice.text) ?? 0.0,
       );
 
       final box = Boxes.getData();
@@ -84,12 +84,12 @@ class AddMenuController extends GetxController {
   }
 
   void fetchIntoFields(
-      MenuModel menuModel, Uint8List image, String name, String category, String price) async {
+      MenuModel menuModel, Uint8List image, String name, String category, double price) async {
     selectedMenuModel.value = menuModel;
     imageBytes.value = image;
     productName.text = name;
     productCategory.text = category;
-    productPrice.text = price;
+    productPrice.text = price.toString();
   }
 
   void editData() async {
@@ -101,8 +101,7 @@ class AddMenuController extends GetxController {
       selectedMenuModel.value!.productImage = imageBytes.value;
       selectedMenuModel.value!.productName = productName.text.toString();
       selectedMenuModel.value!.productCategory = productCategory.text.toString();
-      selectedMenuModel.value!.price = productPrice.text.toString();
-
+      selectedMenuModel.value!.price = double.tryParse(productPrice.text) ?? 0.0;
       await selectedMenuModel.value!.save();
       Get.snackbar("Success", "Product Edit successfully!", snackPosition: SnackPosition.TOP);
       imageBytes.value = null;

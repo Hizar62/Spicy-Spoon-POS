@@ -12,7 +12,7 @@ class MenuModel extends HiveObject {
   @HiveField(2)
   String productCategory;
   @HiveField(3)
-  String price;
+  double price;
   @HiveField(4)
   int quantity;
 
@@ -27,7 +27,7 @@ class MenuModel extends HiveObject {
     Uint8List? productImage,
     String? productName,
     String? productCategory,
-    String? price,
+    double? price,
   }) {
     return MenuModel(
       productImage: productImage ?? this.productImage,

@@ -52,7 +52,7 @@ class CheckOutScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 ...controller.checkOutList.map((item) {
                   String productName = "";
-                  String price = "";
+                  double price = 0.0;
                   int quantity = 1;
 
                   if (item is MenuModel) {

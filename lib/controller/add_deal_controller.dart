@@ -59,7 +59,7 @@ class AddDealController extends GetxController {
         dealName: dealName.text,
         dealCategory: dealCategory.text,
         selectedProduct: selectedProduct.toList(),
-        dealprice: dealPrice.text,
+        dealprice: double.tryParse(dealPrice.text) ?? 0.0,
       );
 
       final box = Boxes.getDealData();
@@ -93,13 +93,13 @@ class AddDealController extends GetxController {
   }
 
   void fetchIntoFields(DealModel dealModel, Uint8List image, String name, List selectedItems,
-      String category, String dealprice) async {
+      String category, double dealprice) async {
     selectedDealModel.value = dealModel;
     imageBytes.value = image;
     dealName.text = name;
     selectedProduct.value = selectedItems as List<String>;
     dealCategory.text = category;
-    dealPrice.text = dealprice;
+    dealPrice.text = dealprice.toString();
   }
 
   void editData() async {
@@ -112,7 +112,7 @@ class AddDealController extends GetxController {
       selectedDealModel.value!.dealName = dealName.text.toString();
       selectedDealModel.value!.dealCategory = dealCategory.text.toString();
       selectedDealModel.value!.selectedProduct = selectedProduct.toList();
-      selectedDealModel.value!.dealprice = dealPrice.text.toString();
+      selectedDealModel.value!.dealprice = double.tryParse(dealPrice.text) ?? 0.0;
 
       await selectedDealModel.value!.save();
       Get.snackbar("Success", "Product Edit successfully!", snackPosition: SnackPosition.TOP);

@@ -6,7 +6,7 @@ class CheckoutController extends GetxController {
   var datetime = DateTime.timestamp().obs;
   var product = ''.obs;
   var quantity = 0.obs;
-  var price = 0.obs;
+  double price = 0.0;
 
   Future<void> savedata() async {
     try {
@@ -14,7 +14,7 @@ class CheckoutController extends GetxController {
           dateTime: datetime.value,
           product: product.value,
           quantity: quantity.value,
-          price: price.value);
+          price: price);
 
       final box = Boxes.getCheckout();
       box.add(checkout);

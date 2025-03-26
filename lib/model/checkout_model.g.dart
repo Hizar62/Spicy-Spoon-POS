@@ -20,7 +20,7 @@ class CheckoutModelAdapter extends TypeAdapter<CheckoutModel> {
       dateTime: fields[0] as DateTime,
       product: fields[1] as String,
       quantity: fields[2] as int,
-      price: fields[3] as int,
+      price: fields[3] as double,
     );
   }
 

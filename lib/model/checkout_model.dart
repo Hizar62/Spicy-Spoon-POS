@@ -12,7 +12,7 @@ class CheckoutModel extends HiveObject {
   @HiveField(2)
   int quantity;
   @HiveField(3)
-  int price;
+  double price;
 
   CheckoutModel(
       {required this.dateTime, required this.product, required this.quantity, required this.price});
@@ -21,7 +21,7 @@ class CheckoutModel extends HiveObject {
     DateTime? dateTime,
     String? product,
     int? quantity,
-    int? price,
+    double? price,
   }) {
     return CheckoutModel(
         dateTime: dateTime ?? this.dateTime,

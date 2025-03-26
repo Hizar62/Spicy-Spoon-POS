@@ -21,7 +21,7 @@ class DealModelAdapter extends TypeAdapter<DealModel> {
       dealName: fields[1] as String,
       selectedProduct: (fields[3] as List).cast<dynamic>(),
       dealCategory: fields[2] as String,
-      dealprice: fields[4] as String,
+      dealprice: fields[4] as double,
       quantity: fields[5] as int,
     );
   }

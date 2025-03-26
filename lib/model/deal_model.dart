@@ -18,7 +18,7 @@ class DealModel extends HiveObject {
   @HiveField(3)
   List selectedProduct;
   @HiveField(4)
-  String dealprice;
+  double dealprice;
   @HiveField(5)
   int quantity;
 
@@ -35,7 +35,7 @@ class DealModel extends HiveObject {
       String? dealName,
       String? dealCategory,
       List? selectedProduct,
-      String? dealprice}) {
+      double? dealprice}) {
     return DealModel(
         dealImage: dealImage ?? this.dealImage,
         dealName: dealName ?? this.dealName,
