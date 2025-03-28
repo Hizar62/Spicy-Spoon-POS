@@ -81,7 +81,7 @@ class CheckOutScreen extends StatelessWidget {
                         Text("Price: $price"),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => controller.checkOutList.remove(item),
+                          onPressed: () => controller.removeToCheckout(item),
                         ),
                       ],
                     ),

@@ -6,7 +6,7 @@ import 'package:printing/printing.dart';
 import 'package:spicyspoon/controller/order_checkout_controller.dart';
 import 'package:spicyspoon/model/menu_model.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:intl/intl.dart'; // Add this for date formatting
+import 'package:intl/intl.dart';
 
 class InvoicePrinter {
   final OrderCheckoutController controller = Get.find<OrderCheckoutController>();
@@ -21,7 +21,7 @@ class InvoicePrinter {
 
       final now = DateTime.now();
       final dateFormat = DateFormat("dd/ MMMM/ yyyy hh:mm a");
-      final formattedDateTime = dateFormat.format(now); 
+      final formattedDateTime = dateFormat.format(now);
 
       pdf.addPage(
         pw.Page(
@@ -56,7 +56,6 @@ class InvoicePrinter {
                   ),
                 ),
                 pw.SizedBox(height: 5),
-                // Add Date and Time here
                 pw.Center(
                   child: pw.Text(
                     formattedDateTime,
@@ -65,11 +64,14 @@ class InvoicePrinter {
                   ),
                 ),
                 pw.Divider(),
+                // Updated Table with 4 columns
                 pw.Table(
                   border: pw.TableBorder.all(width: 0.5),
                   columnWidths: {
-                    0: const pw.FlexColumnWidth(3),
-                    1: const pw.FlexColumnWidth(1),
+                    0: const pw.FlexColumnWidth(2.5), // Item
+                    1: const pw.FlexColumnWidth(1), // Quantity
+                    2: const pw.FlexColumnWidth(1.5), // Actual Price
+                    3: const pw.FlexColumnWidth(1.5), // Price (Qty × Actual)
                   },
                   children: [
                     pw.TableRow(
@@ -78,6 +80,16 @@ class InvoicePrinter {
                           'Item',
                           style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
                           textAlign: pw.TextAlign.left,
+                        ),
+                        pw.Text(
+                          'Qty',
+                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                          textAlign: pw.TextAlign.center,
+                        ),
+                        pw.Text(
+                          'Actual',
+                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                          textAlign: pw.TextAlign.right,
                         ),
                         pw.Text(
                           'Price',
@@ -89,20 +101,22 @@ class InvoicePrinter {
                     for (var item in controller.checkOutList)
                       pw.TableRow(
                         children: [
-                          pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Text(
-                                item is MenuModel ? item.productName : item.dealName,
-                                style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                                maxLines: 2,
-                                overflow: pw.TextOverflow.clip,
-                              ),
-                              pw.Text(
-                                '${item.quantity} × ${(item is MenuModel) ? item.price : item.dealprice}',
-                                style: const pw.TextStyle(fontSize: 7, color: PdfColors.grey),
-                              ),
-                            ],
+                          pw.Text(
+                            item is MenuModel ? item.productName : item.dealName,
+                            style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                            textAlign: pw.TextAlign.left,
+                            maxLines: 2,
+                            overflow: pw.TextOverflow.clip,
+                          ),
+                          pw.Text(
+                            '${item.quantity}',
+                            style: const pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.center,
+                          ),
+                          pw.Text(
+                            '${(item is MenuModel) ? item.price : item.dealprice}',
+                            style: const pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right,
                           ),
                           pw.Text(
                             '${item.quantity * ((item is MenuModel) ? item.price : item.dealprice)}',
