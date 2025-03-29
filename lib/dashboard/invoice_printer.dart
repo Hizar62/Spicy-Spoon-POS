@@ -25,128 +25,151 @@ class InvoicePrinter {
 
       pdf.addPage(
         pw.Page(
-          pageFormat: const PdfPageFormat(80 * PdfPageFormat.mm, double.infinity),
-          margin: const pw.EdgeInsets.all(5),
+          pageFormat: const PdfPageFormat(74 * PdfPageFormat.mm, double.infinity),
+          margin: const pw.EdgeInsets.all(8),
           build: (pw.Context context) {
             return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 if (image != null)
                   pw.Center(
                     child: pw.Image(
                       pw.MemoryImage(Uint8List.fromList(img.encodePng(image))),
-                      width: 150,
-                      height: 70,
+                      width: 120,
+                      height: 60,
                     ),
                   ),
-                pw.SizedBox(height: 10),
-                pw.Center(
-                  child: pw.Text(
-                    'Bhagowal Road Ada Gopalpur Sialkot',
-                    style: const pw.TextStyle(fontSize: 10),
-                    softWrap: true,
-                  ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  'Bhagowal Road Ada Gopalpur Sialkot',
+                  style: const pw.TextStyle(fontSize: 9),
+                  textAlign: pw.TextAlign.center,
+                  softWrap: true,
                 ),
-                pw.SizedBox(height: 5),
-                pw.Center(
-                  child: pw.Text(
-                    'Phone: 03272826000',
-                    style: const pw.TextStyle(fontSize: 10),
-                    softWrap: true,
-                  ),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  'Phone: 03272826000',
+                  style: const pw.TextStyle(fontSize: 8),
+                  textAlign: pw.TextAlign.center,
+                  softWrap: true,
                 ),
-                pw.SizedBox(height: 5),
-                pw.Center(
-                  child: pw.Text(
-                    formattedDateTime,
-                    style: const pw.TextStyle(fontSize: 10),
-                    softWrap: true,
-                  ),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  formattedDateTime,
+                  style: const pw.TextStyle(fontSize: 7),
+                  textAlign: pw.TextAlign.center,
+                  softWrap: true,
                 ),
+                pw.SizedBox(height: 4),
                 pw.Divider(),
-                // Updated Table with 4 columns
                 pw.Table(
                   border: pw.TableBorder.all(width: 0.5),
                   columnWidths: {
-                    0: const pw.FlexColumnWidth(2.5), // Item
-                    1: const pw.FlexColumnWidth(1), // Quantity
-                    2: const pw.FlexColumnWidth(1.5), // Actual Price
-                    3: const pw.FlexColumnWidth(1.5), // Price (Qty × Actual)
+                    0: const pw.FlexColumnWidth(2.5), // ITEM
+                    1: const pw.FlexColumnWidth(1), // QTY
+                    2: const pw.FlexColumnWidth(1), // PRICE
+                    3: const pw.FlexColumnWidth(1), // TOTAL
                   },
+                  defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
                   children: [
                     pw.TableRow(
                       children: [
-                        pw.Text(
-                          'Item',
-                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                          textAlign: pw.TextAlign.left,
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(1),
+                          child: pw.Text(
+                            'ITEM',
+                            style: const pw.TextStyle(fontSize: 8),
+                            textAlign: pw.TextAlign.center,
+                          ),
                         ),
-                        pw.Text(
-                          'Qty',
-                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                          textAlign: pw.TextAlign.center,
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(1),
+                          child: pw.Text(
+                            'QTY',
+                            style: const pw.TextStyle(fontSize: 8),
+                            textAlign: pw.TextAlign.center,
+                          ),
                         ),
-                        pw.Text(
-                          'Actual',
-                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                          textAlign: pw.TextAlign.right,
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(1),
+                          child: pw.Text(
+                            'PRICE',
+                            style: const pw.TextStyle(fontSize: 8),
+                            textAlign: pw.TextAlign.center,
+                          ),
                         ),
-                        pw.Text(
-                          'Price',
-                          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                          textAlign: pw.TextAlign.right,
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(1),
+                          child: pw.Text(
+                            'TOTAL',
+                            style: const pw.TextStyle(fontSize: 8),
+                            textAlign: pw.TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
                     for (var item in controller.checkOutList)
                       pw.TableRow(
                         children: [
-                          pw.Text(
-                            item is MenuModel ? item.productName : item.dealName,
-                            style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                            textAlign: pw.TextAlign.left,
-                            maxLines: 2,
-                            overflow: pw.TextOverflow.clip,
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(1),
+                            child: pw.Text(
+                              item is MenuModel ? item.productName : item.dealName,
+                              style: const pw.TextStyle(fontSize: 7),
+                              textAlign: pw.TextAlign.center,
+                              maxLines: 2,
+                              overflow: pw.TextOverflow.clip,
+                            ),
                           ),
-                          pw.Text(
-                            '${item.quantity}',
-                            style: const pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.center,
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(1),
+                            child: pw.Text(
+                              '${item.quantity}',
+                              style: const pw.TextStyle(fontSize: 7),
+                              textAlign: pw.TextAlign.center,
+                            ),
                           ),
-                          pw.Text(
-                            '${(item is MenuModel) ? item.price : item.dealprice}',
-                            style: const pw.TextStyle(fontSize: 9),
-                            textAlign: pw.TextAlign.right,
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(1),
+                            child: pw.Text(
+                              '${(item is MenuModel) ? item.price : item.dealprice}',
+                              style: const pw.TextStyle(fontSize: 7),
+                              textAlign: pw.TextAlign.center,
+                            ),
                           ),
-                          pw.Text(
-                            '${item.quantity * ((item is MenuModel) ? item.price : item.dealprice)}',
-                            style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                            textAlign: pw.TextAlign.right,
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(1),
+                            child: pw.Text(
+                              '${item.quantity * ((item is MenuModel) ? item.price : item.dealprice)}',
+                              style: const pw.TextStyle(fontSize: 7),
+                              textAlign: pw.TextAlign.center,
+                            ),
                           ),
                         ],
                       ),
+                    pw.TableRow(
+                      children: [
+                        pw.Text(''),
+                        pw.Text(''),
+                        pw.Text(''),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(1),
+                          child: pw.Text(
+                            '${controller.total}',
+                            style: const pw.TextStyle(fontSize: 9),
+                            textAlign: pw.TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 pw.Divider(),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(
-                      'Total:',
-                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
-                    ),
-                    pw.Text(
-                      'RS: ${controller.total}',
-                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
-                    ),
-                  ],
-                ),
-                pw.SizedBox(height: 10),
-                pw.Center(
-                  child: pw.Text(
-                    'Thank you for your visit!',
-                    style: const pw.TextStyle(fontSize: 10),
-                  ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  'Thank You!',
+                  style: const pw.TextStyle(fontSize: 9),
+                  textAlign: pw.TextAlign.center,
                 ),
               ],
             );
