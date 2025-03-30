@@ -22,12 +22,22 @@ class AddDealController extends GetxController {
   var dealcategory = <String>[].obs;
   var selectedCategory = "".obs;
   final AddMenuController addMenuController = AddMenuController();
+  final productInputController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
     loadProducts();
     loadCategories();
+  }
+
+  @override
+  void onClose() {
+    productInputController.dispose();
+    dealName.dispose();
+    dealCategory.dispose();
+    dealPrice.dispose();
+    super.onClose();
   }
 
   Future<void> getImage() async {
@@ -77,7 +87,7 @@ class AddDealController extends GetxController {
       dealPrice.clear();
 
       Get.snackbar("Success", "Product saved successfully!", snackPosition: SnackPosition.TOP);
-      update(); 
+      update();
     } catch (e) {
       Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.redAccent, colorText: Colors.white);
@@ -152,4 +162,4 @@ class AddDealController extends GetxController {
   void setCategory(String category) {
     selectedCategory.value = category;
   }
-}
+} 

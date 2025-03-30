@@ -97,11 +97,11 @@ class EditMenu extends StatelessWidget {
                                 IconButton(
                                   onPressed: () {
                                     controller.fetchIntoFields(
-                                        data[index],
+                                        filteredData[index],
                                         imageBytes,
-                                        data[index].productName,
-                                        data[index].productCategory,
-                                        data[index].price);
+                                        filteredData[index].productName,
+                                        filteredData[index].productCategory,
+                                        filteredData[index].price);
                                   },
                                   icon: const Icon(Icons.edit),
                                   color: Colors.green,
@@ -125,7 +125,7 @@ class EditMenu extends StatelessWidget {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                controller.delete(data[index]);
+                                                controller.delete(filteredData[index]);
                                                 Navigator.of(context).pop();
                                               },
                                               child: const Text("Delete"),

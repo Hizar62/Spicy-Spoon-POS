@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:spicyspoon/model/deal_model.dart';
 import '../boxes/boxes.dart';
 import '../controller/add_deal_controller.dart';
@@ -138,23 +137,52 @@ class _AddDealState extends State<AddDeal> {
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    child: Obx(() {
-                      return MultiSelectDialogField(
-                        items: controller.selectProduct.toList(),
-                        title: const Text("Select Products"),
-                        selectedColor: Colors.blue,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.black),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: controller.productInputController, // Add this to controller
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            labelText: 'Add Product',
+                            labelStyle: const TextStyle(color: Colors.black),
+                            hintText: 'Enter product and press Enter',
+                            hintStyle: const TextStyle(color: Colors.black),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.black),
+                            ),
+                          ),
+                          onFieldSubmitted: (value) {
+                            if (value.trim().isNotEmpty) {
+                              controller.selectedProduct.add(value.trim());
+                              controller.productInputController.clear();
+                            }
+                          },
                         ),
-                        buttonText: const Text("Select Products"),
-                        initialValue: controller.selectedProduct.toList(),
-                        onConfirm: (values) {
-                          controller.selectedProduct.assignAll(values.cast<String>());
-                        },
-                      );
-                    }),
+                        const SizedBox(height: 10),
+                        Obx(() => Wrap(
+                              spacing: 8.0,
+                              runSpacing: 4.0,
+                              children: controller.selectedProduct
+                                  .map((product) => Chip(
+                                        label: Text(product),
+                                        backgroundColor: Colors.blue.withOpacity(0.1),
+                                        deleteIcon: const Icon(Icons.close, size: 18),
+                                        onDeleted: () {
+                                          controller.selectedProduct.remove(product);
+                                        },
+                                      ))
+                                  .toList(),
+                            )),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(

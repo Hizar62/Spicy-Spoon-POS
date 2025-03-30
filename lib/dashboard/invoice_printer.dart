@@ -183,7 +183,6 @@ class InvoicePrinter {
       );
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      print(e.toString());
     }
   }
 }

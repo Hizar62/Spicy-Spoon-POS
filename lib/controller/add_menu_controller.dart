@@ -18,11 +18,18 @@ class AddMenuController extends GetxController {
   var dealCategory = <String>[].obs;
   var selectedDealCategory = "".obs;
 
+
   @override
   void onInit() {
     super.onInit();
     loadCategories();
     loadDealCategories();
+    if (dealCategory.isNotEmpty) {
+      selectedDealCategory.value = dealCategory.first;
+    } else if (category.isNotEmpty) {
+      selectedCategory.value = category.first;
+    }
+    update();
   }
 
   Future<void> getImage() async {
@@ -131,10 +138,14 @@ class AddMenuController extends GetxController {
   }
 
   void setCategory(String category) {
+    selectedDealCategory.value = "";
     selectedCategory.value = category;
+    update();
   }
 
   void setDealCategory(String category) {
+    selectedCategory.value = "";
     selectedDealCategory.value = category;
+    update();
   }
 }

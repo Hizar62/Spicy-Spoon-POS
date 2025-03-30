@@ -21,7 +21,6 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
-
   @override
   void initState() {
     super.initState();
@@ -30,6 +29,7 @@ class _OrderState extends State<Order> {
       controller.loadDealCategories();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -95,7 +95,7 @@ class _OrderState extends State<Order> {
                       return Card(
                         child: ElevatedButton(
                           onPressed: () {
-                            controller.setCategory(controller.dealCategory[index]);
+                            controller.setDealCategory(controller.dealCategory[index]);
                           },
                           child: Text(
                             controller.dealCategory[index],
@@ -118,16 +118,18 @@ class _OrderState extends State<Order> {
                           var menuData = menuBox.values.toList().cast<MenuModel>();
                           var dealData = dealBox.values.toList().cast<DealModel>();
 
+                          // Filter menu items: only show when selectedCategory is set
                           var filteredMenu = controller.selectedCategory.value.isEmpty
-                              ? menuData
+                              ? <MenuModel>[] // Empty list when no category selected
                               : menuData
                                   .where((item) =>
                                       item.productCategory.trim().toLowerCase() ==
                                       controller.selectedCategory.value.trim().toLowerCase())
                                   .toList();
 
+                          // Filter deals: only show when selectedDealCategory is set
                           var filteredDeals = controller.selectedDealCategory.value.isEmpty
-                              ? dealData
+                              ? <DealModel>[] // Empty list when no deal category selected
                               : dealData
                                   .where((deal) =>
                                       deal.dealCategory.trim().toLowerCase() ==
@@ -151,14 +153,12 @@ class _OrderState extends State<Order> {
                               String name = "";
                               String price = "";
                               String category = "";
-                              String extraInfo = "";
 
                               if (item is MenuModel) {
                                 imageBytes = item.productImage;
                                 name = item.productName;
                                 price = "RS:${item.price}";
                                 category = item.productCategory;
-                                extraInfo = "";
                               } else if (item is DealModel) {
                                 imageBytes = item.dealImage;
                                 name = item.dealName;
@@ -175,7 +175,7 @@ class _OrderState extends State<Order> {
                                     final dealItem = item;
                                     keyboardController.text.value = dealItem.quantity.toString();
                                   } else {
-                                    keyboardController.text.value = '1'; 
+                                    keyboardController.text.value = '1';
                                   }
 
                                   orderCheckoutController.addToCheckout(item);
@@ -193,8 +193,6 @@ class _OrderState extends State<Order> {
                                       Text(name,
                                           style: const TextStyle(fontWeight: FontWeight.bold)),
                                       Text(category, style: const TextStyle(color: Colors.grey)),
-                                      if (extraInfo.isNotEmpty)
-                                        Text(extraInfo, style: const TextStyle(color: Colors.grey)),
                                       Text(price, style: const TextStyle(color: Colors.green)),
                                     ],
                                   ),
@@ -292,7 +290,6 @@ class _OrderState extends State<Order> {
                                           price,
                                           style: const TextStyle(color: Colors.green),
                                         ),
-                                        
                                       ],
                                     ),
                                   ),
@@ -334,7 +331,6 @@ class _OrderState extends State<Order> {
                                       ),
                                     ),
                                   ),
-
                                 ],
                               );
                             },
@@ -441,5 +437,3 @@ class _OrderState extends State<Order> {
     );
   }
 }
-
-
