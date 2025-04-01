@@ -115,7 +115,7 @@ class InvoicePrinter {
                             padding: const pw.EdgeInsets.all(1),
                             child: pw.Text(
                               item is MenuModel ? item.productName : item.dealName,
-                              style: const pw.TextStyle(fontSize: 7),
+                              style: const pw.TextStyle(fontSize: 8),
                               textAlign: pw.TextAlign.center,
                               maxLines: 2,
                               overflow: pw.TextOverflow.clip,
@@ -125,7 +125,7 @@ class InvoicePrinter {
                             padding: const pw.EdgeInsets.all(1),
                             child: pw.Text(
                               '${item.quantity}',
-                              style: const pw.TextStyle(fontSize: 7),
+                              style: const pw.TextStyle(fontSize: 8),
                               textAlign: pw.TextAlign.center,
                             ),
                           ),
@@ -133,7 +133,7 @@ class InvoicePrinter {
                             padding: const pw.EdgeInsets.all(1),
                             child: pw.Text(
                               '${(item is MenuModel) ? item.price : item.dealprice}',
-                              style: const pw.TextStyle(fontSize: 7),
+                              style: const pw.TextStyle(fontSize: 8),
                               textAlign: pw.TextAlign.center,
                             ),
                           ),
@@ -141,7 +141,7 @@ class InvoicePrinter {
                             padding: const pw.EdgeInsets.all(1),
                             child: pw.Text(
                               '${item.quantity * ((item is MenuModel) ? item.price : item.dealprice)}',
-                              style: const pw.TextStyle(fontSize: 7),
+                              style: const pw.TextStyle(fontSize: 8),
                               textAlign: pw.TextAlign.center,
                             ),
                           ),
