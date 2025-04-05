@@ -1,16 +1,47 @@
-# spicyspoon
+# 🍽️ Flutter Desktop POS for Restaurants
 
-A new Flutter project.
+Flutter Desktop POS for Restaurants is a sleek and efficient solution tailored for seamless restaurant operations. It allows users to add, edit, and delete products and deals with ease. The system keeps a comprehensive sales record, helping staff manage transactions accurately.
 
-## Getting Started
+To meet the need for **offline usage and speed**, it uses the **Hive local database**, ensuring fast performance without requiring internet access. Invoices are **small and compact**, designed to save thermal printer roll and reduce paper waste.
 
-This project is a starting point for a Flutter application.
+> A perfect choice for restaurants wanting a **lightweight**, **offline-friendly**, and **eco-conscious** POS system. 🧾🍽️
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🔧 Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Add, edit, and delete products and deals
+- Compact invoices for thermal printers
+- Local storage using Hive DB (no internet required)
+- Sales records tracking
+- Fast and responsive Flutter UI
+
+---
+
+## 🖼️ Screenshots
+
+| Home | Products | Add Product |
+|------|----------|-------------|
+| ![1](picture/1.jpeg) | ![2](picture/2.jpeg) | ![3](picture/3.jpeg) |
+
+| Deals | Invoice | Sales History |
+|-------|---------|----------------|
+| ![4](picture/4.jpeg) | ![5](picture/5.jpeg) | ![6](picture/6.jpeg) |
+
+---
+
+## 🚀 Tech Stack
+
+- **Flutter** (Desktop)
+- **Hive** (Local NoSQL DB)
+- **Dart**
+
+---
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/Hizar62/Spicy-Spoon-POS.git
+cd Spicy-Spoon-POS
+flutter pub get
+flutter run -d windows 

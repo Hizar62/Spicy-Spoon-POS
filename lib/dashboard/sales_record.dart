@@ -43,10 +43,13 @@ class SalesRecord extends StatelessWidget {
               for (var item in checkoutList) {
                 String formattedDate = DateFormat('dd-MM-yyyy').format(item.dateTime);
                 groupedByDate.putIfAbsent(formattedDate, () => []).add(item);
-                
               }
               var sortedEntries = groupedByDate.entries.toList()
-                ..sort((a, b) => b.key.compareTo(a.key)); 
+                ..sort((a, b) {
+                  DateTime dateA = DateFormat('dd-MM-yyyy').parse(a.key);
+                  DateTime dateB = DateFormat('dd-MM-yyyy').parse(b.key);
+                  return dateB.compareTo(dateA);
+                });
 
               return Obx(() {
                 return ListView(
